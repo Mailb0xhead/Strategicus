@@ -127,3 +127,18 @@ body {
   }
 
   /*******************   Main page styles *******************/
+
+  .vsc-initialized {
+    padding: 0;
+  }
+
+
+  /*******************   Button styles *******************/
+
+  .btn-secondary:hover {
+    background-color:#9a877876;
+  }
+
+  /* .btn-secondary:hover {
+    background-color: red;
+  } */

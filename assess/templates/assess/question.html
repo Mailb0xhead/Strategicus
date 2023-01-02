@@ -5,29 +5,31 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link href="{% static 'css/bootstrap-switch.css' %}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
+<!-- q.id not updating -->
 
 <div class="container" >
-  <div class="row align-items-center" id="row">
+  <div class="d-flex flex-column align-items-center" id="row">
     <!-- {{quest.questions}}{{quest.questions|length}} -->
     {% with q=quest.questions.0 %}
     {% if quest.questions|length > 0 %}
       <input type="hidden" id="questnbr" value="{{q.id}}">
-      <div class="col-md-10 align-items-center" id="cell">
+      <div class="col-md-10 align-items-center text-center h3" id="cell">
         <div id="sc_contents">
               <div id="question">{{q.question}} </div>
         </div>
       </div>
-      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-          <input id="assChky1" type="button" value="yes" onclick="scoreUpdate(1, 1, 1, 1)" class="btn {% if q.answer == 1 %} btn-success {% else %} btn-secondary {% endif %} btn-block">
+      <div class=" col-md-12 d-flex flex-row justify-content-center" style="padding:5px;">
+        <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
+            <input id="assChky1" type="button" value="yes" onclick="scoreUpdate(1, 1, 1, 1)" class="btn btn-secondary col-12">
+        </div>
+        <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
+          <input id="assChkn1" type="button" value="no" onclick="scoreUpdate(1, 1, 1, 0)" class="btn btn-secondary col-12">
       </div>
-      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-        <input id="assChkn1" type="button" value="no" onclick="scoreUpdate(1, 1, 1, 0)" class="btn {% if q.answer == 0 %} btn-danger {% else %} btn-secondary {% endif %} btn-block">
     </div>
 
       {% else %}
@@ -38,9 +40,14 @@
       </div>
       {% endif %}
   </div>
-  <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
-  <div class="col-md-10 align-middle align-items-center">Next based on YES: <div style="display:inline-block;" id="response2"> Answer block2 </div></div>
-  <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div>
+  <!-- <div class="row align-items-center" id="row">
+    <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
+    <div class="col-md-10 align-middle align-items-center">Next based on YES: <div style="display:inline-block;" id="response2"> Answer block2 </div></div>
+    <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div>
+  </div> -->
+  <div class="row align-items-center" id="row">
+    <div class="col-md-12 align-middle align-items-center text-center"><a href="/results?scid=6">View Summary</a></div>
+  </div>
 </div>
 {% endwith %}
 
@@ -75,49 +82,20 @@
     }
   });
 
-
-  // $.ajaxSetup({
-  // 	beforeSend: function(xhr, settings) {
-  // 	if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-  // 		// Only send the token to relative URLs i.e. locally.
-  // 		xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-  // 	}
-  // 	}
-  // });
-
-
-  function myFunction() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myMap");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      tr[i].style.display = "";
-      } else {
-      tr[i].style.display = "none";
-      }
-    }       
-    }
-  }
-
   function scoreUpdate(asessment, next, user, answer) {
 
     var question = document.getElementById("questnbr").value
     var form = new FormData();
     form.append("ass_id", asessment);
     form.append("q_id", question);
+    console.log("q_id", question);
     form.append("next_id", next);
     form.append("usr_id", user);
     form.append("answer", answer);
 
     var settings = {
-    "url": "http://192.168.0.208:8000/api/question/",
-    // "url": "http://test.geekfest.live:8000/api/stats/rating/",
+    "url": "http://192.168.0.208:777/api/question/",
+    // "url": "http://test.geekfest.live:777/api/stats/rating/",
     "method": "POST",
     "timeout": 0,
     // "headers": {
@@ -136,26 +114,32 @@
     console.log(test_val[0].question_id, test_val[0].question);
 
     document.getElementById("question").innerHTML = test_val[0].question;
-    document.getElementById("response1").innerHTML = test_val[0].question;
-    document.getElementById("response2").innerHTML = test_val[0].yquest;
-    document.getElementById("response3").innerHTML = test_val[0].nquest;
+    // document.getElementById("response1").innerHTML = test_val[0].question;
+    // document.getElementById("response2").innerHTML = test_val[0].yquest;
+    // document.getElementById("response3").innerHTML = test_val[0].nquest;
+    document.getElementById("questnbr").value = test_val[0].question_id;
+    console.log("questnbr updated to ", test_val[0].question_id);
+    if (test_val[0].question_id == 99999){
+      // go to view summary
+      window.location.href = "/results?scid=6";
+    }
     
     
     });
 
-    var eley = 'assChky1', elen = 'assChkn1';
-    if (answer==0) {
-      document.getElementById(eley).classList.remove('btn-success');
-      document.getElementById(elen).classList.remove('btn-secondary');
-      document.getElementById(eley).classList.add('btn-secondary');
-      document.getElementById(elen).classList.add('btn-danger');
-    }
-    if (answer==1) {
-      document.getElementById(eley).classList.remove('btn-secondary');
-      document.getElementById(eley).classList.add('btn-success');
-      document.getElementById(elen).classList.remove('btn-danger');
-      document.getElementById(elen).classList.add('btn-secondary');
-    }
+    // var eley = 'assChky1', elen = 'assChkn1';
+    // if (answer==0) {
+    //   document.getElementById(eley).classList.remove('btn-success');
+    //   document.getElementById(elen).classList.remove('btn-secondary');
+    //   document.getElementById(eley).classList.add('btn-secondary');
+    //   document.getElementById(elen).classList.add('btn-danger');
+    // }
+    // if (answer==1) {
+    //   document.getElementById(eley).classList.remove('btn-secondary');
+    //   document.getElementById(eley).classList.add('btn-success');
+    //   document.getElementById(elen).classList.remove('btn-danger');
+    //   document.getElementById(elen).classList.add('btn-secondary');
+    // }
 
   }
   </script>

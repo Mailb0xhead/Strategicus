@@ -5,11 +5,10 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link href="{% static 'css/bootstrap-switch.css' %}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
 
 <div class="container" >
@@ -23,10 +22,10 @@
         </div>
       </div>
       <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-          <input id="assChky{{ forloop.counter }}" type="button" value="yes" onclick="scoreUpdate(1,{{i.id}},1, 1, 1, '{{forloop.counter}}')" class="btn {% if i.answer == 1 %} btn-success {% else %} btn-secondary {% endif %} btn-block">
+          <input id="assChky{{ forloop.counter }}" type="button" value="yes" onclick="scoreUpdate(1,{{i.id}},1, 1, 1, '{{forloop.counter}}')" class="btn {% if i.answer == 1 %} btn-success {% else %} btn-secondary {% endif %} col-12">
       </div>
       <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-        <input id="assChkn{{ forloop.counter }}" type="button" value="no" onclick="scoreUpdate(1,{{i.id}},1, 1, 0, '{{forloop.counter}}')" class="btn {% if i.answer == 0 %} btn-danger {% else %} btn-secondary {% endif %} btn-block">
+        <input id="assChkn{{ forloop.counter }}" type="button" value="no" onclick="scoreUpdate(1,{{i.id}},1, 1, 0, '{{forloop.counter}}')" class="btn {% if i.answer == 0 %} btn-danger {% else %} btn-secondary {% endif %} col-12">
     </div>
 
       {% endfor %}
@@ -38,9 +37,9 @@
       </div>
       {% endif %}
   </div>
-  <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
+  <!-- <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
   <div class="col-md-10 align-middle align-items-center">Next based on YES: <div style="display:inline-block;" id="response2"> Answer block2 </div></div>
-  <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div>
+  <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div> -->
 </div>
 
 
@@ -134,9 +133,9 @@
     console.log(test_val);
     console.log(test_val[0].question_id, test_val[0].question);
 
-    document.getElementById("response1").innerHTML = test_val[0].question;
-    document.getElementById("response2").innerHTML = test_val[0].yquest;
-    document.getElementById("response3").innerHTML = test_val[0].nquest;
+    // document.getElementById("response1").innerHTML = test_val[0].question;
+    // document.getElementById("response2").innerHTML = test_val[0].yquest;
+    // document.getElementById("response3").innerHTML = test_val[0].nquest;
     
     
     });

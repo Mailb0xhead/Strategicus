@@ -43,6 +43,19 @@ class Outcomes(models.Model):
     def __str__(self):
         return self.outcome
 
+class Resources(models.Model):
+    resource_id = models.AutoField(primary_key=True)
+    resource = models.CharField(max_length=500, blank=True, null=True)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    resource_cost = models.FloatField()
+    resource_type = models.CharField(max_length=50, blank=True, null=True)
+    outcome = models.ForeignKey('Outcomes', on_delete=models.CASCADE)
+    create_date = models.DateField(blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.resource
+
 class Scores(models.Model):
     score_id = models.AutoField(primary_key=True)
     ass_id = models.ForeignKey('Assessments', on_delete=models.CASCADE)
