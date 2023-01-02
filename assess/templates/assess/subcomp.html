@@ -1,0 +1,26 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+
+<div class="container" id="grid">
+  <div class="row align-items-center" id="row">
+      <div class="col-md-4 border align-middle align-items-center" id="cell" onclick="window.location.href='question?scid=6';">
+        <div id="contents">
+          <img src="/static/icons/projectmanagement.png" alt="- no icon -" height=46px/>
+          <div>Project Management</div>
+        </div>
+      </div>
+      <div class="col-md-4 border" id="cell" onclick="window.location.href='subcomp?scid={{comp.1.comp_id}}';">
+        <div id="contents">
+          <img src="/static/icons/servicedesk.png" alt="- no icon -" height=46px/>
+          <div>Service Desk</div>
+        </div>
+      </div>
+    </div>
+</div>
+	
+{% endblock content %}

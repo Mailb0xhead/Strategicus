@@ -1,0 +1,46 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+<div class="d-flex flex-column justify-content-center" id="">
+  <div class="pt-3 mx-auto"><h1>Welcome to</h1></div>
+  <div class="pt-3 mx-auto"><img src="{% static 'images/sus.png' %}" alt="- no icon -" height=200px /></div>
+  <div class="col-md-5 pt-3 mx-auto">
+    <h4 class="p-3 text-center">Strategicus is a platform by which an organization can evaluate their capabilities on a given focus area and receive a prescription for how they can evolve.
+    We bring solution providers, experts and consultants to our platform to prescribe both free and paid solutions.
+    </h4>
+  </div>
+  <div class="row align-items-center mx-auto" id="row">
+    <div class="col-md-6 border align-middle align-items-center" id="">
+      <input id="" type="button" value="Sign In" onclick="window.location.href='/accounts/login';" class="btn btn-primary"></input>
+    </div>
+    <div class="col-md-4 border align-middle align-items-center" id="">
+      <span title="Strategicus is in development.  Registrations are closed at this time."><input id="" type="button" value="Register" onclick="" class="btn btn-secondary"></input></span>
+    </div>
+  </div>
+
+  <div class="mx-auto col-md-5" style="padding-top: 100px;"><h1 style="padding:20px; background-color: #9a877876;">Our Ecosystem</h1></div>
+  <div class="mx-auto" style="padding-top: 10px;"><img src="{% static 'images/ecosystem.png' %}" alt="- no icon -" height=400px /></div>
+  <div class="col-md-5 pt-3 mx-auto">
+    <h4 class="p-3 text-center">Strategicus connects our subscribers with existing resources and partners based on their own demographics in an ecosystem that is actively curated by industry experts.</h4>
+  </div>
+  <div class="mx-auto col-md-5" style="padding-top: 100px;"><h1 style="padding:20px; background-color: #9a877876;">The Process</h1></div>
+  <div class="mx-auto" style="padding-top: 10px;"><img src="{% static 'images/process.png' %}" alt="- no icon -" height=400px /></div>
+  <div class="col-md-5 pt-3 mx-auto">
+    <h4 class="p-3 text-center">Our process keeps it simple for any subscriber to get recommendations fast.  They are then able to act, rate and even add recommendations as they resolve the actions that are prescribed.</h4>
+  </div>
+  <div class="mx-auto col-md-5" style="padding-top: 100px;"><h1 style="padding:20px; background-color: #9a877876;">The Framework</h1></div>
+  <div class="mx-auto" style="padding-top: 10px;"><img src="{% static 'images/framework.png' %}" alt="- no icon -" height=350px /></div>
+  <div class="col-md-5 pt-3 mx-auto">
+    <h4 class="p-3 text-center">The genius of the StrategicUs lies in the alignment of the questions to the subscriber’s demographics and the sequential / decision tree orientation of the questions.  They help build a picture rather than asking you all possible questions.</h4>
+  </div>
+  <div class="col-md-5 pb-xl mx-auto">
+
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,51 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+	<link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css">
+	
+
+  {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+  
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p>Your account doesn't have access to this page. To proceed,
+      please login with an account that has access.</p>
+    {% else %}
+      <p class='fjoefin fmed' style="color:lightblue; text-align:center;">Please login </p>
+    {% endif %}
+  {% endif %}
+  
+  <main class="form-signin w-100 m-auto text-center">
+  	<form method="post" action="{% url 'login' %}?next={{next}}">
+		{% csrf_token %}
+		<img class="mb-4 mx-auto d-block" src="{% static 'icons/sus_icon.gif' %}" alt="" width="45" height="">
+		<h1 class="h3 mx-auto d-block fw-normal">Please sign in</h1>
+
+		<div class="form-floating">
+			<input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username">
+			<label for="id_username">Username</label>
+			<!-- {{ form.username.label_tag }}
+			{{ form.username }} -->
+		</div>
+		<div class="form-floating">
+			<input type="password" name="password"  class="form-control" id="floatingPassword" placeholder="Password" autocomplete="current-password" required id="id_password">
+			<label for="id_password">Password</label>
+			<!-- {{ form.password.label_tag }}
+			{{ form.password }} -->
+		</div>
+		<button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+	</form>
+		{# Assumes you setup the password_reset view in your URLconf #}
+		<div class="my-3" style="margin-bottom:50px;"><a href="{% url 'password_reset' %}">Lost password?</a></div>
+		<input type="hidden" name="next" value="{{ next }}" />
+  </main>
+    
+
+
+{% endblock %}

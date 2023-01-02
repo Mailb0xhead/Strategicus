@@ -1,0 +1,161 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link href="{% static 'css/bootstrap-switch.css' %}" rel="stylesheet">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+<div class="container" >
+  <div class="row align-items-center" id="row">
+    <!-- {{quest.questions}}{{quest.questions|length}} -->
+      {% if quest.questions|length > 0 %}
+      {% for i in quest.questions %}
+      <div class="col-md-10 align-items-center" id="cell">
+        <div id="sc_contents">
+              <div>{{i.question}} </div>
+        </div>
+      </div>
+      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
+          <input id="assChky{{ forloop.counter }}" type="button" value="yes" onclick="scoreUpdate(1,{{i.id}},1, 1, 1, '{{forloop.counter}}')" class="btn {% if i.answer == 1 %} btn-success {% else %} btn-secondary {% endif %} btn-block">
+      </div>
+      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
+        <input id="assChkn{{ forloop.counter }}" type="button" value="no" onclick="scoreUpdate(1,{{i.id}},1, 1, 0, '{{forloop.counter}}')" class="btn {% if i.answer == 0 %} btn-danger {% else %} btn-secondary {% endif %} btn-block">
+    </div>
+
+      {% endfor %}
+      {% else %}
+      <div class="col-md-4 border align-middle align-items-center" id="cell">
+        <div id="contents">
+              <div>No questions are available for this subcomponent</div>
+        </div>
+      </div>
+      {% endif %}
+  </div>
+  <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
+  <div class="col-md-10 align-middle align-items-center">Next based on YES: <div style="display:inline-block;" id="response2"> Answer block2 </div></div>
+  <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div>
+</div>
+
+
+
+<script>
+
+  function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  function sameOrigin(url) {
+    // test that a given url is a same-origin URL
+    // url could be relative or scheme relative or absolute
+    var host = document.location.host; // host + port
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    // Allow absolute or scheme relative URLs to same origin
+    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+      (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+      // or any other URL that isn't scheme relative or absolute i.e relative.
+      !(/^(\/\/|http:|https:).*/.test(url));
+  }
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+        // Send the token to same-origin, relative URLs only.
+        // Send the token only if the method warrants CSRF protection
+        // Using the CSRFToken value acquired earlier
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+      }
+    }
+  });
+
+
+  // $.ajaxSetup({
+  // 	beforeSend: function(xhr, settings) {
+  // 	if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+  // 		// Only send the token to relative URLs i.e. locally.
+  // 		xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+  // 	}
+  // 	}
+  // });
+
+
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myMap");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      tr[i].style.display = "";
+      } else {
+      tr[i].style.display = "none";
+      }
+    }       
+    }
+  }
+
+  function scoreUpdate(asessment, question, next, user, answer, idctr) {
+
+    var form = new FormData();
+    form.append("ass_id", asessment);
+    form.append("q_id", question);
+    form.append("next_id", next);
+    form.append("usr_id", user);
+    form.append("answer", answer);
+
+    var settings = {
+    "url": "http://192.168.0.208:8000/api/question/",
+    // "url": "http://test.geekfest.live:8000/api/stats/rating/",
+    "method": "POST",
+    "timeout": 0,
+    // "headers": {
+    // 	"Cookie": "sessionid=fkcrfqey2igzl8m9alg6qlsihcd0n89j"
+    // },
+    "processData": false,
+    "mimeType": "multipart/form-data",
+    "contentType": false,
+    "data": form
+    };
+
+    $.ajax(settings).done(function (response) {
+    console.log(response);
+    var test_val = JSON.parse(JSON.parse(response));
+    console.log(test_val);
+    console.log(test_val[0].question_id, test_val[0].question);
+
+    document.getElementById("response1").innerHTML = test_val[0].question;
+    document.getElementById("response2").innerHTML = test_val[0].yquest;
+    document.getElementById("response3").innerHTML = test_val[0].nquest;
+    
+    
+    });
+
+    var eley = 'assChky'+idctr, elen = 'assChkn'+idctr;
+    if (answer==0) {
+      document.getElementById(eley).classList.remove('btn-success');
+      document.getElementById(elen).classList.remove('btn-secondary');
+      document.getElementById(eley).classList.add('btn-secondary');
+      document.getElementById(elen).classList.add('btn-danger');
+    }
+    if (answer==1) {
+      document.getElementById(eley).classList.remove('btn-secondary');
+      document.getElementById(eley).classList.add('btn-success');
+      document.getElementById(elen).classList.remove('btn-danger');
+      document.getElementById(elen).classList.add('btn-secondary');
+    }
+
+  }
+  </script>
+	
+{% endblock content %}

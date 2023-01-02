@@ -1,0 +1,65 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+
+<div class="container" id="grid">
+    <div class="row align-items-center" id="row">
+        <div class="col-md-4 border align-middle align-items-center" id="cell" onclick="window.location.href='subcomp?scid={{comp.0.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.0.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.0.name}}</div>
+          </div>
+        </div>
+        <div class="col-md-4 border" id="cell" onclick="window.location.href='subcomp?scid={{comp.1.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.1.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.1.name}}</div>
+          </div>        </div>
+        <div class="col-md-4 border" id="cell" onclick="window.location.href='subcomp?scid={{comp.2.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.2.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.2.name}}</div>
+          </div>        </div>
+      </div>
+      <div class="row align-items-center" id="row">
+        <div class="col-md-4 border align-middle align-items-center" id="cell" onclick="window.location.href='/subcomp?scid={{comp.3.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.3.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.3.name}}</div>
+          </div>
+        </div>
+        <div class="col-md-4 border" id="cell" onclick="window.location.href='subcomp?scid={{comp.4.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.4.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.4.name}}</div>
+          </div>        </div>
+        <div class="col-md-4 border" id="cell" onclick="window.location.href='/subcomp?scid={{comp.5.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.5.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.5.name}}</div>
+          </div>        </div>
+      </div>
+      <div class="row align-items-center" id="row">
+        <div class="col-md-4 border align-middle align-items-center" id="cell" onclick="window.location.href='subcomp?scid={{comp.6.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.6.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.6.name}}</div>
+          </div>        </div>
+        <div class="col-md-4 border" id="cell" onclick="window.location.href='subcomp?scid={{comp.7.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.7.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.7.name}}</div>
+          </div>        </div>
+        <div class="col-md-4 border" id="cell" onclick="window.location.href='subcomp?scid={{comp.8.comp_id}}';">
+          <div id="contents">
+            <img src="{% static 'icons/' %}{{comp.8.icon}}" alt="- no icon -" height=46px/>
+            <div>{{comp.8.name}}</div>
+          </div>        </div>
+      </div>
+  </div>
+	
+{% endblock content %}
