@@ -10,44 +10,32 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
-<h3 class="text-center pt-3">Assessment Summary</h3>
+<h3 class="text-center pt-3">Actions</h3>
 <hr class="style5">
 
 <div class="container" >
   <div class="row align-items-center" id="row">
-    <!-- {{quest.questions}}{{quest.questions|length}} -->
-      {% if quest.questions|length > 0 %}
-      {% for i in quest.questions %}
-      {% if i.id != 99999 %}
-      <div class="col-md-9 align-items-center" id="cell">
+      {% if quest.actions|length > 0 %}
+
+      {% for i in quest.actions %}
+      <div class="col-md-1 form-check" id="cell"><input type="checkbox" name="check" id="check1" class="form-check-input" style="margin:auto;"></div>
+      <div class="col-md-11 align-items-center" id="cell">
         <div id="sc_contents">
-              <div>{{i.question}} </div>
-        </div>
+            <div><a href="/engagement?actionid={{i.id}}">{{i.name}}</a> </div>
+       </div>
       </div>
-      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-          <input id="assChky{{ forloop.counter }}" type="button" value="yes" onclick="scoreUpdate(1,{{i.id}},1, 1, 1, '{{forloop.counter}}')" class="btn {% if i.answer == 1 %} btn-success {% else %} btn-secondary {% endif %} col-12">
-      </div>
-      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-        <input id="assChkn{{ forloop.counter }}" type="button" value="no" onclick="scoreUpdate(1,{{i.id}},1, 1, 0, '{{forloop.counter}}')" class="btn {% if i.answer == 0 %} btn-danger {% else %} btn-secondary {% endif %} col-12">
-    </div>
-    <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
-      <input id="assChkx{{ forloop.counter }}" type="button" value="n/a" onclick="scoreUpdate(1,{{i.id}},1, 1, 9, '{{forloop.counter}}')" class="btn {% if i.answer == 9 %} btn-info {% else %} btn-secondary {% endif %} col-12">
-    </div>
-    {% endif %}
       {% endfor %}
       <div><a href="/question?scid={{quest.id}}&section=q">Retake Assessment</a></div>
-      <div><a href="/question?scid={{quest.id}}&section=a">View Actions</a></div>
+      <div><a href="/question?scid={{quest.id}}&section=r">View Summary</a></div>
       {% else %}
       <div class="col-md-4 border align-middle align-items-center" id="cell">
         <div id="contents">
-              <div>No questions are available for this subcomponent</div>
+              <div>Congratulations, you have no pending actions needed for this area!</div>
         </div>
       </div>
       {% endif %}
   </div>
-  <!-- <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
-  <div class="col-md-10 align-middle align-items-center">Next based on YES: <div style="display:inline-block;" id="response2"> Answer block2 </div></div>
-  <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div> -->
+
 </div>
 
 
@@ -136,6 +124,7 @@
     };
 
     $.ajax(settings).done(function (response) {
+    console.log(response);
     var test_val = JSON.parse(JSON.parse(response));
     console.log(test_val);
     console.log(test_val[0].question_id, test_val[0].question);

@@ -12,6 +12,8 @@
 
 <!-- q.id not updating -->
 
+<h3 class="text-center pt-3">Questions</h3>
+<hr class="style5">
 <div class="container" >
   <div class="d-flex flex-column align-items-center" id="row">
     <!-- {{quest.questions}}{{quest.questions|length}} -->
@@ -46,7 +48,7 @@
     <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div>
   </div> -->
   <div class="row align-items-center" id="row">
-    <div class="col-md-12 align-middle align-items-center text-center"><a href="/results?scid=6">View Summary</a></div>
+    <div class="col-md-12 align-middle align-items-center text-center"><a href="/question?scid=14&section=r">View Summary</a></div>
   </div>
 </div>
 {% endwith %}
@@ -88,7 +90,6 @@
     var form = new FormData();
     form.append("ass_id", asessment);
     form.append("q_id", question);
-    console.log("q_id", question);
     form.append("next_id", next);
     form.append("usr_id", user);
     form.append("answer", answer);
@@ -108,10 +109,9 @@
     };
 
     $.ajax(settings).done(function (response) {
-    console.log(response);
+    console.log('response',response);
     var test_val = JSON.parse(JSON.parse(response));
-    console.log(test_val);
-    console.log(test_val[0].question_id, test_val[0].question);
+    // console.log(test_val[0].question_id, test_val[0].question);
 
     document.getElementById("question").innerHTML = test_val[0].question;
     // document.getElementById("response1").innerHTML = test_val[0].question;
@@ -121,9 +121,9 @@
     console.log("questnbr updated to ", test_val[0].question_id);
     if (test_val[0].question_id == 99999){
       // go to view summary
-      window.location.href = "/results?scid=6";
+      window.location.href = "/question?scid=14&section=r";
     }
-    
+
     
     });
 

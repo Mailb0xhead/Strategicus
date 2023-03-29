@@ -1,3 +1,12 @@
 
 Next up:
-    Have the API return the next question and display on the page
+    
+Jake:
+    get all questions to process on question.html
+    remove the test data from the screen ("question just answered")
+    reformat screen to not format button colors until clicked
+    Rearrange the question and answers to a better format
+    Add some sort of animation when answered (like a slider)
+    When the question id returned is end of questions 99999, forward url to results.html (same as link on bottom)
+
+    

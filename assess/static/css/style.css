@@ -42,6 +42,30 @@
   font-size: larger;
   font-weight: 600;
 }
+
+#cell .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0px;
+  background-color: #9a877876;
+  border-radius: 1rem;
+  
+}
+
+.row .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0px;
+  flex-wrap: wrap;
+}
+
+.icon {
+  padding: 10px;
+  height: 75px;
+}
+
 /* ************** Header Styles **************  */
 .login {
 	position: fixed;
@@ -69,6 +93,8 @@ body {
     padding-bottom: 20px;
     background-color: #9a877830;
     display: block;
+    max-width: 1440px;
+    margin: auto;
   }
   
   .navbar {
@@ -126,6 +152,22 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 
+  /*******************   AI page styles *******************/
+
+  #aiResponse {
+    display: flex;
+    flex-direction: column;
+    width: 1000px; 
+    min-height: 300px; 
+    background-color: lightgrey; 
+    overflow-y: auto; 
+    max-height: 300px; 
+    padding:5px;
+    overflow-x: hidden;
+    text-align:justify;
+}
+
+
   /*******************   Main page styles *******************/
 
   .vsc-initialized {
@@ -139,6 +181,3 @@ body {
     background-color:#9a877876;
   }
 
-  /* .btn-secondary:hover {
-    background-color: red;
-  } */

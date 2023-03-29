@@ -1,0 +1,124 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+<!-- <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+
+<!-- q.id not updating -->
+
+<h3 class="text-center pt-3">Action: </h3>
+<p class="text-center">{{action.0.outcome}}</p>
+<hr class="style5">
+<div class="row" style="width: 100%;">
+    <div class="container" style="max-width: 50%;">
+        <div class="col-md-5 border align-middle align-items-center" style="display: table-row" id="cell"
+            onclick="hide_row('consulting');">
+            <div id="contents" class="container">
+                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
+                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
+                <div><h3>Partners</h3></div>
+            </div>
+        </div>
+        <div class="col-md-5 border align-middle align-items-center" id="cell"
+            onclick="hide_row('solution');">
+            <div id="contents" class="container">
+                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
+                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
+                <div><h3>Solution Providers</h3></div>
+            </div>
+        </div>
+        <div class="col-md-5 border align-middle align-items-center" id="cell"
+            onclick="hide_row('training');">
+            <div id="contents" class="container">
+                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
+                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
+                <div><h3>Training</h3></div>
+            </div>
+        </div>
+        <div class="col-md-5 border align-middle align-items-center" id="cell"
+            onclick="hide_row('video');">
+            <div id="contents" class="container">
+                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
+                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
+                <div><h3>Videos</h3></div>
+            </div>
+        </div>
+        <div class="col-md-5 border align-middle align-items-center" id="cell"
+            onclick="hide_row('website');">
+            <div id="contents" class="container">
+                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
+                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
+                <div><h3>Websites</h3></div>
+            </div>
+        </div>
+        <div class="col-md-5 border align-middle align-items-center" id="cell"
+            onclick="hide_row('book');">
+            <div id="contents" class="container">
+                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
+                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
+                <div><h3>Books</h3></div>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="max-width: 50%;">
+        <h3>Strategicus Recommends:</h3>
+        <div style="height:100px;">The recommendations below are based on what our ai sees in the marketplace and what can help youin the short term.  Use the solution sets at the left to see what other partners and providers can do to help you fulfill this need within your organization.</div>
+        <div style="background-color: white; border-radius: 1em; width:100%; padding: 5px; height: 300px;">
+            <p style="padding:5px;" id="aiGuidance" onload="ask_ai()">ai generated info will go here</p>
+        </div>
+        <input type="button" value="Ask AI" onclick="ask_ai()">
+    </div>
+</div>
+<hr>
+<table class="table table-hover table-striped">
+    <tr>
+        <th>Type</th>
+        <th>Engagement</th>
+        <th>Description</th>
+        <th>Cost</th>
+        <th>Knowledge Level</th>
+        <th>Complexity</th>
+        <th>Duration</th>
+        <th>Rating</th>
+    </tr>
+    {% for e in engagement %}
+    <tr name="{{e.type}}">
+        <td>{{e.type}}</td>
+        <td><a href="{{e.link}}">{{e.name}}</a></td>
+        <td>{{e.desc}}</td>
+        <td style="text-align: right;">${{e.cost}}</td>
+        <td style="text-align: center;">{{e.level}}</td>
+        <td style="text-align: center;">{{e.complexity}}</td>
+        <td style="text-align: center;">{{e.duration}} {{e.duration_units}}</td>
+        <td style="text-align: center;">{{e.rating}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="/question?scid=14&section=a">Return to actions</a>
+
+<script>
+    function hide_row(ele) {
+        var type = ele
+        var x = document.getElementsByName(type);
+        for (var i = 0; i < x.length; i++) {
+            if (x[i].style.display === "none") {
+                x[i].style.display = "table-row";
+            } else {
+                x[i].style.display = "none";
+            }
+        }
+        // if (x.style.display === "none") {
+        //     x.style.display = "table-row";
+        // } else {
+        //     x.style.display = "none";
+        // }
+    }
+</script>
+<script src="{% static 'scripts/ai.js' %}"></script>
+{% endblock content %}

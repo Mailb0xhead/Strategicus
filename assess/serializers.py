@@ -7,3 +7,12 @@ class QuestionSerializer(serializers.Serializer):
     usr_id = serializers.IntegerField()
     answer = serializers.IntegerField()
 
+class ChatSerializer(serializers.Serializer):
+    chat_prompt = serializers.CharField(max_length=500)
+    chat_history = serializers.CharField(max_length=2000)
+    action = serializers.CharField(max_length=50)
+
+class ActionSerializer(serializers.Serializer):
+    prompt_1 = serializers.CharField(max_length=500)
+    prompt_2 = serializers.CharField(max_length=500)
+    type= serializers.CharField(max_length=50)

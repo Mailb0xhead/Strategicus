@@ -21,6 +21,26 @@ class Components(models.Model):
     def __str__(self):
         return self.name
 
+class Engagements(models.Model):
+    eng_id = models.AutoField(primary_key=True)
+    resource_id = models.ForeignKey('Resources', db_column='resource_id', on_delete=models.CASCADE)
+    outcome_id = models.ForeignKey('Outcomes', db_column='outcome_id', on_delete=models.CASCADE)
+    eng_name = models.CharField(max_length=45, blank=True, null=True)
+    eng_desc = models.CharField(max_length=500, blank=True, null=True)
+    eng_type = models.CharField(max_length=20, blank=True, null=True)
+    eng_cost = models.IntegerField(blank=True, null=True)
+    eng_level = models.CharField(max_length=45, blank=True, null=True)
+    eng_complexity = models.CharField(max_length=45, blank=True, null=True)
+    eng_duration = models.IntegerField(blank=True, null=True)
+    eng_duration_units = models.CharField(max_length=45, blank=True, null=True)
+    eng_link = models.CharField(max_length=500, blank=True, null=True)
+    eng_rating = models.FloatField(blank=True, null=True)
+    create_date = models.DateField(blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
 class Questions(models.Model):
     question_id = models.AutoField(primary_key=True)
     question = models.CharField(max_length=500, blank=True, null=True)
@@ -47,9 +67,9 @@ class Resources(models.Model):
     resource_id = models.AutoField(primary_key=True)
     resource = models.CharField(max_length=500, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    resource_cost = models.FloatField()
-    resource_type = models.CharField(max_length=50, blank=True, null=True)
-    outcome = models.ForeignKey('Outcomes', on_delete=models.CASCADE)
+    resource_link = models.CharField(max_length=500, blank=True, null=True)
+    resource_type = models.CharField(max_length=45, blank=True, null=True)
+    resource_rating = models.FloatField(blank=True, null=True)
     create_date = models.DateField(blank=True, null=True)
     update_date = models.DateField(blank=True, null=True)
 
