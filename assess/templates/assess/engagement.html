@@ -1,6 +1,6 @@
 {% extends 'assess/base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}{{title}}{% endblock title %}
 
 {% block content %}
@@ -12,70 +12,28 @@
 
 <!-- q.id not updating -->
 
-<h3 class="text-center pt-3">Action: </h3>
-<p class="text-center">{{action.0.outcome}}</p>
-<hr class="style5">
-<div class="row" style="width: 100%;">
-    <div class="container" style="max-width: 50%;">
-        <div class="col-md-5 border align-middle align-items-center" style="display: table-row" id="cell"
-            onclick="hide_row('consulting');">
-            <div id="contents" class="container">
-                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
-                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
-                <div><h3>Partners</h3></div>
-            </div>
-        </div>
-        <div class="col-md-5 border align-middle align-items-center" id="cell"
-            onclick="hide_row('solution');">
-            <div id="contents" class="container">
-                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
-                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
-                <div><h3>Solution Providers</h3></div>
-            </div>
-        </div>
-        <div class="col-md-5 border align-middle align-items-center" id="cell"
-            onclick="hide_row('training');">
-            <div id="contents" class="container">
-                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
-                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
-                <div><h3>Training</h3></div>
-            </div>
-        </div>
-        <div class="col-md-5 border align-middle align-items-center" id="cell"
-            onclick="hide_row('video');">
-            <div id="contents" class="container">
-                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
-                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
-                <div><h3>Videos</h3></div>
-            </div>
-        </div>
-        <div class="col-md-5 border align-middle align-items-center" id="cell"
-            onclick="hide_row('website');">
-            <div id="contents" class="container">
-                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
-                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
-                <div><h3>Websites</h3></div>
-            </div>
-        </div>
-        <div class="col-md-5 border align-middle align-items-center" id="cell"
-            onclick="hide_row('book');">
-            <div id="contents" class="container">
-                <img src="/static/icons/{{i.icon}}.png" class="icon" alt="- no icon -" height=46px
-                    onerror="this.src=&quot;{% static 'images/'%}sus_icon.gif&quot; ;" />
-                <div><h3>Books</h3></div>
-            </div>
-        </div>
-    </div>
-    <div class="container" style="max-width: 50%;">
-        <h3>Strategicus Recommends:</h3>
-        <div style="height:100px;">The recommendations below are based on what our ai sees in the marketplace and what can help youin the short term.  Use the solution sets at the left to see what other partners and providers can do to help you fulfill this need within your organization.</div>
-        <div style="background-color: white; border-radius: 1em; width:100%; padding: 5px; height: 300px;">
-            <p style="padding:5px;" id="aiGuidance" onload="ask_ai()">ai generated info will go here</p>
-        </div>
-        <input type="button" value="Ask AI" onclick="ask_ai()">
-    </div>
+<div class="container bg-warning mt-3" style="align-items: center; justify-content: flex-start;">
+    <h3 class="text-center">Action: </h3>
+    <p class="section_text px-3">{{action.0.outcome}}</p>
 </div>
+<hr class="style5">
+    <div class="container p-0" style="justify-content: left; flex-direction: column;">
+        <p class="section_text">Strategicus Recommends:</p>
+        <!-- <p style="section_text" id="aiGuidance">There are many different ways to keep track of your project work separately from your day-to-day work. One option is to use a project management tool like Asana, Trello, or Jira. These tools allow you to track tasks and deadlines, as well as assign tasks to specific team members. Another option is to keep a separate project notebook where you track all of the tasks and deadlines for each project. This can be a good option if you don't want to use a project management tool, or if you only have a few projects that you're working on. A third option is to work with a training or consulting partner who can help you to track your project work and ensure that it is separate from your day-to-day work. This can be a good option if you want someone else to take care of the logistics of tracking your projects.</p> -->
+        <p style="section_text" id="aiGuidance">Thinking...</p>
+        <input type="button" value="Ask AI" onclick="ask_ai('{{action.0.outcome}}')">
+    </div>
 <hr>
+<div class="container py-2">
+    <!-- <div class="row"> -->
+    <div id="contents" class="filter col-md-2 border align-middle text-center" onclick="hide_row('website','W');" name="W">Websites</div>
+    <div id="contents" class="filter col-md-2 border align-middle text-center" onclick="hide_row('book','B');" name="B">Books</div>
+    <div id="contents" class="filter col-md-2 border align-middle text-center" onclick="hide_row('consulting','C');" name="C">Partners </div> 
+    <div id="contents" class="filter col-md-2 border align-middle text-center" onclick="hide_row('solution','S');" name="S">Solutions </div>
+    <div id="contents" class="filter col-md-2 border align-middle text-center" onclick="hide_row('training','T');" name="T">Training </div>
+    <div id="contents" class="filter col-md-2 border align-middle text-center" onclick="hide_row('video','V');" name="V">Videos </div>
+    <!-- </div> -->
+</div>
 <table class="table table-hover table-striped">
     <tr>
         <th>Type</th>
@@ -89,10 +47,10 @@
     </tr>
     {% for e in engagement %}
     <tr name="{{e.type}}">
-        <td>{{e.type}}</td>
+        <td style="text-align: center; text-transform:capitalize;">{{e.type}}</td>
         <td><a href="{{e.link}}">{{e.name}}</a></td>
-        <td>{{e.desc}}</td>
-        <td style="text-align: right;">${{e.cost}}</td>
+        <td style="font-size: small;">{{e.desc}}</td>
+        <td style="text-align: right;">${{e.cost|intcomma}}</td>
         <td style="text-align: center;">{{e.level}}</td>
         <td style="text-align: center;">{{e.complexity}}</td>
         <td style="text-align: center;">{{e.duration}} {{e.duration_units}}</td>
@@ -102,14 +60,24 @@
 </table>
 <a href="/question?scid=14&section=a">Return to actions</a>
 
+<script src="{% static 'scripts/ai.js' %}"></script>
 <script>
-    function hide_row(ele) {
+    // document.addEventListener( "DOMContentLoaded", ask_ai('{{action.0.outcome}}'));
+    function hide_row(ele,btn) {
         var type = ele
+        var button = btn
+        var y = document.getElementsByName(button);
         var x = document.getElementsByName(type);
+        if (x.length == 0) {
+            y[0].style.backgroundColor = "lightgray";
+            y[0].style.color = "gray";
+        }
         for (var i = 0; i < x.length; i++) {
-            if (x[i].style.display === "none") {
+            if (x[i].style.display == "none") {
+                y[0].style.backgroundColor = "#f3c98b";
                 x[i].style.display = "table-row";
             } else {
+                y[0].style.backgroundColor = "#9a877876";
                 x[i].style.display = "none";
             }
         }
@@ -120,5 +88,5 @@
         // }
     }
 </script>
-<script src="{% static 'scripts/ai.js' %}"></script>
+
 {% endblock content %}

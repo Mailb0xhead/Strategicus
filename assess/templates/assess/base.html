@@ -1,4 +1,5 @@
 {% load static %}
+
 <!doctype html>
 <html>
 	<head>
@@ -12,7 +13,7 @@
 		<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
 		<link rel="icon" type="image/png" href="{% static 'images/sus_icon.gif' %}">
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 		<!-- Favicons -->
 		<link rel="apple-touch-icon" href="/docs/5.2/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
 		<link rel="manifest" href="/docs/5.2/assets/img/favicons/manifest.json">
@@ -30,11 +31,20 @@
 			<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light" aria-label="Main navigation">
 				<div class="container-fluid">
 				  <a class="navbar-brand" href="/"><img src="{% static 'images/sus.png' %}" alt="STRATEGICUS" height=46px/></a>
-				  <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+				  <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" data-toggle="collapse" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
-				  </button>
-			  
-				  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+				  </button>			  
+				  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+					<div class="navbar-nav">
+						<a href="/assessment" class="nav-item nav-link active">Assessments</a>
+						<a href="/ai_old" class="nav-item nav-link">AI</a>
+						<a href="/goals" class="nav-item nav-link">Goals</a>
+						<a href="#" class="nav-item nav-link">Admin</a>
+						<a href="#" class="nav-item nav-link">Profile</a>
+					</div>
+				 
+				 
+				  <!-- <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					  <li class="nav-item">
 						<a class="nav-link active" aria-current="page" href="/assessment">Assessments</a>
@@ -53,7 +63,7 @@
 						  <li><a class="dropdown-item" href="#">Something else here</a></li>
 						</ul>
 					  </li>
-					</ul>
+					</ul> -->
 					{% if user.is_authenticated %}
 					<div class="login"><span title="Click to logout"><a href="{% url 'logout' %}">
 						<div class="login-img"><img src = "{%static 'images/loggedin.png' %}" style="height: 45px;"></div>

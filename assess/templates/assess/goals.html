@@ -1,0 +1,148 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <script src="{% static 'scripts/api.js' %}"></script>
+    <script src="{% static 'scripts/main.js' %}"></script>
+    <script src="{% static 'scripts/dnd.js' %}"></script>
+    <script>
+
+
+
+    </script>
+<div class="col-sm-10">
+  <h2 class="text-center">Goals</h2>
+  <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Start by entering some goals you would like to achieve.</h4>
+  <p id="gInstr" class="text-center">They can be something you can get done tomorrow or something that will take you a lifetime.  At this step, it's more important to just list some goals you want to acheive than to worry about perfecting your life's aspirations.</p>
+</div>
+    <div id="listId2" class="col-sm-10">
+      {% for x in "123456789" %}
+      <div id="itemNo{{forloop.counter}}" class="listitem box cellrow" name="goalNbr{{forloop.counter}}">
+        <div id="goalSort" class="cell goalSort" style="display:none;"><i class="bi bi-justify"></i></div>
+        <div class="cell">{{forloop.counter}}.</div>
+        <div class="input-group">
+          <div class="input-group-prepend"><span class="input-group-text activeText">Goal:</span> </div>
+          <input type="text" class="form-control text" placeholder="Type One of Your Goals Here..." aria-label="Goal:" aria-describedby="basic-addon1" id="txtGoal{{forloop.counter}}">
+        </div>
+        <div class="input-group goalTime" id="goalTime" style="width:25%; display:none;">
+          <div class="input-group" id="">
+            <div class="input-group-prepend"><span class="input-group-text lblTime">Timing</span> </div>
+            <select name="gTime{{forloop.counter}}" id="gTime" class="custom-select form-control level">
+                <option value="XX">Select Timing</option>
+                <option value="TK">About 1 week</option>
+                <option value="ST">About 1 - 2 months</option>
+                <option value="MT">6 months to a year</option>
+                <option value="LT">A few years</option>
+                <option value="LL">More than 5 years</option>
+            </select>
+          
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  <div class="height"></div>
+  <div class="col-sm-10 text-center">
+    <button id="btnNext" type="button" class="btn btn-primary" onclick="btnNext();" style="margin: 5px; width:125px;">
+        Next  <i class="bi bi-arrow-right"></i> </button>
+      <button id="btnSave"  type="button" class="btn btn-primary" onclick="saveGoals();" style="margin: 5px; width:125px; display:none;">
+        <i class="bi bi-save"></i>  Save</button>
+  </div>     
+  <div class="height"></div>
+    <!-- <div class="" id="outputDiv">
+        <b>Output of ID's of images : </b>
+        <input id="outputvalues" type="text" value="" />
+    </div> -->
+  
+  <script>
+
+    function btnNext() {
+      const g = document.querySelectorAll(".goalSort");
+      const g2 = document.querySelectorAll(".goalTime");
+
+      var x = document.getElementById("goalTime");
+      var y = document.getElementById("goalSort");
+
+      if (x.style.display === "none") {
+        for (const goal of g2) {
+          goal.style.display = "block";
+          fieldActive(".lblTime");
+        }
+        document.getElementById("gStep").innerHTML = "<i class='bi bi-2-circle-fill'></i>  Next, select how long you think it will take to achieve each goal.";
+        document.getElementById("gInstr").innerHTML = "This is just a rough estimate.  You can change it later if you want.";
+      } else {
+        fieldActive(".goalSort");
+        for (const goal of g) {
+          goal.style.display = "block";
+        }
+        document.getElementById("gStep").innerHTML = "<i class='bi bi-3-circle-fill'></i>  Finally, drag and drop your goals into the order you want to achieve them.";
+        document.getElementById("gInstr").innerHTML = "You can change this later if you want.";
+        document.getElementById("btnNext").style.display = "none";
+        document.getElementById("btnSave").style.display = "inline-block";
+
+      }
+    }
+
+    function fieldActive(newFld) {
+        const ele = document.querySelectorAll(".activeText");
+        ele.forEach(function (e) {
+          e.classList.remove("activeText");
+        });
+        const ele2 = document.querySelectorAll(newFld);
+        ele2.forEach(function (e) {
+          e.classList.add("activeText");
+        });
+      }
+
+
+ 
+
+      function saveGoals(){
+        var form = new FormData();
+        var goals = [];
+        var goalTimes = [];
+        var userId = {{user.id}};
+        $('#' + 'listId2' + ' .listitem').each(function(index) {
+          goals.push($(this).find('input').val());
+          goalTimes.push($(this).find('select').val());
+        });
+        jGoals = JSON.stringify({ data: goals });
+        jTimes = JSON.stringify({ data: goalTimes });
+        form.append("goals", jGoals);
+        form.append("goalTimes", jTimes);
+        form.append("userId", userId);
+
+        console.log('goals:  ',goals);
+        console.log('goalTimes:  ',goalTimes);
+
+        var settings = {
+        "url": "http://192.168.0.208:777/api/goalapi/",
+        "method": "POST",
+        "timeout": 0,
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+        "data": form,
+        };
+
+        $.ajax(settings).done(function (response) {
+        let answer = JSON.parse(response);
+        let text = answer.choices[0].text;
+        console.error(answer);
+        console.log(text);
+      });
+    };
+
+    </script>
+
+
+
+
+
+{% endblock content %}

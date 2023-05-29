@@ -14,6 +14,9 @@ class questions:
         self.id = data['question_id']
         self.question = data['question']
         self.answer = 9
+        self.level = data['level']
+        self.type = data['type']
+        self.section = data['section_id__name']
 
     def __str__(self):
         return self.name
@@ -30,6 +33,18 @@ class actions:
     def __str__(self):
         return self.name
 
+########################################################################
+### SECTIONS
+###     This class contains the data for section of a question on an assessment
+########################################################################
+class sections:
+    def __init__(self, data, sid):
+        self.name = data
+        self.id = sid
+        self.questions = []
+
+    def __str__(self):
+        return self.name
 
 ########################################################################
 ### ASSESS
@@ -40,13 +55,29 @@ class assess:
         self.id = 0
         self.name = data
         self.questions = []
+        self.sections = []
         self.quest_ids = []
         self.actions = []
 
     def add_questions(self, data):
+        self.subcomp = data[0]['subcomp__name']
+        curr_section_name = data[0]['section_id__name']
+        curr_section = sections(curr_section_name, data[0]['section_id'])
+
         for q in data:
+            print(q['section_id__name'], curr_section_name)
+            if q['section_id__name'] != curr_section_name:
+                print("adding section")
+                self.sections.append(curr_section)
+                curr_section_name = q['section_id__name']
+                curr_section = sections(curr_section_name, q['section_id'])
+            # print(curr_section.name, curr_section.questions)
+            curr_section.questions.append(questions(q))
             self.questions.append(questions(q))
             self.quest_ids.append(q['question_id'])
+        self.sections.append(curr_section)
+
+        
 
     def add_scores(self,data):
         for q in self.questions:

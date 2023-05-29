@@ -14,3 +14,14 @@ function getCookie(name) {
     return cookieValue;
     }
 
+    function toggleDisp(in_id,in_type) {
+
+        var x = document.getElementById(in_id);
+        console.log(x);
+        if (x.style.display === "none") {
+          x.style.display = in_type;
+        } else {
+          x.style.display = "none";
+        }
+        console.log("toggled");
+      }

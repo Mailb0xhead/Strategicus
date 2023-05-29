@@ -5,8 +5,9 @@ from . import views, apiviews
 urlpatterns = [
     path('', views.index, name='index'),
     path('question', views.question, name='question'),
-    path('subcomp', views.subcomp, name='subcomp'),
+    path('goals', views.goals, name='goals'),
     path('question/', apiviews.question, name='question'),
+    path('goalapi/', apiviews.goals_api, name='goals'),
     path('ai_old/', views.ai, name='ai'),
     path('engagement/', views.engagement, name='engagement'),
     path('ai/', apiviews.ai, name='ai'),

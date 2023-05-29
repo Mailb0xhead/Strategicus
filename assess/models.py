@@ -40,19 +40,47 @@ class Engagements(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Goals(models.Model):
+    goal_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    goal = models.CharField(max_length=500, blank=True, null=True)
+    duration = models.CharField(max_length=2, blank=True, null=True)
+    roll_up = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='f_rollup')
+    break_down = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='f_breakdown')
+    create_date = models.DateField(blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
 
 class Questions(models.Model):
     question_id = models.AutoField(primary_key=True)
     question = models.CharField(max_length=500, blank=True, null=True)
     subcomp = models.ForeignKey('Subcomps', on_delete=models.CASCADE)
+    section = models.ForeignKey('Sections', on_delete=models.CASCADE)
+    exit_on_no = models.CharField(max_length=1, blank=True, null=True)
+    next = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, related_name='f_nxt')
+    level = models.IntegerField(blank=True, null=True)
+    type = models.CharField(max_length=45, blank=True, null=True)
+    outcome = models.ForeignKey('Outcomes', on_delete=models.CASCADE)
+    create_date = models.DateField(blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
     yes = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
     no = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, related_name='f_yes')
-    outcome = models.ForeignKey('Outcomes', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.question
+    
+class Sections(models.Model):
+    section_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=45, blank=True, null=True)
+    next_section = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
+    first_question = models.IntegerField(blank=True, null=True)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    icon = models.CharField(max_length=100, blank=True, null=True)
     create_date = models.DateField(blank=True, null=True)
     update_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.question
+        return self.name
 
 class Outcomes(models.Model):
     outcome_id = models.AutoField(primary_key=True)
@@ -84,7 +112,6 @@ class Scores(models.Model):
     create_date = models.DateField(blank=True, null=True)
     user_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
 
-
     def __str__(self):
         return self.ass_id.user_id.username + ': '+ self.ass_id.name + ' - '+ self.question_id.question + ' [' + str(self.score) + ']'
 
@@ -99,5 +126,3 @@ class Subcomps(models.Model):
 
     def __str__(self):
         return self.name + ' - ' + self.comp.name
-
-

@@ -38,11 +38,12 @@ $.ajaxSetup({
     }
 });
 
-function ask_ai() {
+function ask_ai(in_prompt) {
+    var prompt = in_prompt;
     var form = new FormData();
     //   var aiprompt = document.getElementById("aiPrompt").value;
     // var airesponse =  document.getElementById("aiResponse").textContent;
-    var aiprompt1 = "Tell me how I can start to record and account my project work separately from my day to day work."
+    var aiprompt1 = "Tell me how I can " + prompt + " better.";
     var aiprompt2 = "This answer should consider all areas of that can help like books, websites, training or consulting partners."
     //   var newText = document.createElement("p");
     form.append("prompt_1", aiprompt1);

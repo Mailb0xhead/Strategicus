@@ -1,0 +1,149 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+<script src="{% static 'scripts/dnd.js' %}"></script>
+<script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<h2>Edit Questions for {{quest.subcomp}}</h2> 
+  {% for i in quest.sections %}
+    <div class="setup" style="">
+      <div class="hdrrow" style="">{{i.name}}</div>
+      <div id="listId{{i.id}}" class="cellrow" style="">
+      {% for q in i.questions %}
+      <div id="itemNo{{q.id}}" class="qstn listitem" style="">
+        <!-- <div>{{q.id}}</div> -->
+        <div class="qual">
+          <div>{{q.level}}</div>
+          <div>{{q.type}}</div>
+        </div>
+          <div>{{q.question}}</div>
+          <div><button id="editBtn" onclick="openEdit('{{q.question}}','{{q.type}}',{{q.level}},{{q.id}},{{i.id}})">edit</button></div>
+      </div>
+      {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+
+  <div id="setupModal" class="modal">
+    <div class="modal-content">
+      <h3>Edit Question #<span id="modalIdVal">5</span><span class="edit-close">&times;</span></h3>      
+      <input id="modalId" type="hidden" value="1">
+      <p style="background-color: antiquewhite; border-radius: 5px;"><b>Original Question:  </b><span id="modalQuest">The question goes here</span></p>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend"><span class="input-group-text">Question:</span> </div>
+        <input type="text" class="form-control text" placeholder="Type Question Here..." aria-label="Question:" aria-describedby="basic-addon1" id="txtQuest">
+      </div>
+      <div class="row mb-3">        
+        <div class="input-group w-25">
+          <div class="input-group-prepend"><span class="input-group-text">Section:</span></div>
+          <select name="qSection" id="modalSection" class="custom-select form-control level">
+            {% for i in quest.sections %}
+              <option value="{{i.id}}">{{i.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="input-group w-25">
+          <div class="input-group-prepend"><span class="input-group-text">Type:</span></div>
+          <select name="type" id="modalType" class="custom-select form-control type" >
+            <option value="people">People</option>
+            <option value="process">Process</option>
+            <option value="technology">Technology</option>
+          </select>
+        </div>
+        <div class="input-group w-25">
+          <div class="input-group-prepend"><span class="input-group-text">Level:</span></div>
+          <select name="level" id="modalLevel" class="custom-select form-control level">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Next Question on Yes:</span></div>
+        {% for i in quest.sections %}
+        <select name="qYes{{i.id}}" id="modalYes{{i.id}}" style="display: none;" class="custom-select form-control qYesSelect">
+          {% for q in i.questions %}
+            <option value="{{q.id}}">{{q.question}}</option>
+          {% endfor %}
+        </select>
+        {% endfor %}
+      <input id="modalSave" type="button" value="Save" onclick="" class="btn btn-primary btn-sm col-1 mx-auto">
+    </div>
+  </div>
+
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("setupModal");
+  var txtQuest = document.getElementById("txtQuest");
+  var modalQuest = document.getElementById("modalQuest");
+  var modalSection = document.getElementById("modalSection");
+  var modalType = document.getElementById("modalType");
+  var modalLevel = document.getElementById("modalLevel");
+// Get the button that opens the modal
+  var btn = document.getElementById("editBtn");
+
+// Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("edit-close")[0];
+
+  function openEdit(quest,type,level,q_id, s_id) {
+    var q = quest;
+    var t = type;
+    var l = level;
+    var qid = q_id;
+    var sid = s_id;
+
+    console.warn(q,t,l,qid);
+    modalQuest.innerHTML = q;
+    modalIdVal.innerHTML = qid;
+    txtQuest.value = q;
+    modalSection.value = sid;
+    modalType.value = t;
+    modalLevel.value = l;
+    modalId.value = qid;  
+    displayNext(sid);
+    console.warn('modalId',modalId.value);
+
+
+    modal.style.display = "block";
+  }
+
+  function displayNext(id) {
+    var qid = id;
+    console.warn('qid',qid);
+    document.querySelectorAll('.qYesSelect').forEach(function(el) {
+      el.style.display = 'none';
+    });
+    var modalYes = document.getElementById("modalYes"+qid);
+    console.warn('modalYes',modalYes);
+    modalYes.style.display = "block";
+  }
+
+
+  // When the user clicks on the button, open the modal
+  // btn.onclick = function() {
+  //   modal.style.display = "block";
+  // }
+
+// When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+// When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>	
+{% endblock content %}
+

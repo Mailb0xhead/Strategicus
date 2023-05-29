@@ -14,14 +14,25 @@
 
 <h3 class="text-center pt-3">Questions</h3>
 <hr class="style5">
-<div class="container" >
-  <div class="d-flex flex-column align-items-center" id="row">
-    <!-- {{quest.questions}}{{quest.questions|length}} -->
-    {% with q=quest.questions.0 %}
-    {% if quest.questions|length > 0 %}
+<div class="" >
+  {% with q=quest.questions.0 %}
+  {% if quest.questions|length > 0 %}
+  <div class="d-flex flex-column align-items-center" style="height: 250px; border-radius: 1em;
+    {% if q.type == 'process' %} background-color: aliceblue;
+    {% elif q.type == 'people' %} background-color: antiquewhite;
+    {% elif q.type == 'tool' %} background-color: aquamarine;
+    {% endif %}" id="row">
+      <div class="container">
+        <div class="tag-box" id="qsection">{{q.section}}</div>
+        <div class="tag-fade" id="qtype">{{q.type}}</div>
+        <div class="tag-box" id="qlevel">{{q.level}}</div>
+      </div>
       <input type="hidden" id="questnbr" value="{{q.id}}">
+      <!-- <input type="hidden" id="qsection" value="{{q.section}}">
+      <input type="hidden" id="qtype" value="{{q.type}}">
+      <input type="hidden" id="qlevel" value="{{q.level}}"> -->
       <div class="col-md-10 align-items-center text-center h3" id="cell">
-        <div id="sc_contents">
+        <div id="sc_contents" style="height: 125px;">
               <div id="question">{{q.question}} </div>
         </div>
       </div>
@@ -32,6 +43,10 @@
         <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
           <input id="assChkn1" type="button" value="no" onclick="scoreUpdate(1, 1, 1, 0)" class="btn btn-secondary col-12">
       </div>
+      <div class="col-md-1 align-middle align-items-center" style="padding:5px;">
+        <input id="assChkn1" type="button" value="skip" onclick="scoreUpdate(1, 1, 1, 9)" class="btn btn-outline-info col-12">
+      </div>
+
     </div>
 
       {% else %}
@@ -42,19 +57,19 @@
       </div>
       {% endif %}
   </div>
-  <!-- <div class="row align-items-center" id="row">
-    <div class="col-md-10 align-middle align-items-center">Question just answered: <div style="display:inline-block;" id="response1"> Answer block1 </div></div>
-    <div class="col-md-10 align-middle align-items-center">Next based on YES: <div style="display:inline-block;" id="response2"> Answer block2 </div></div>
-    <div class="col-md-10 align-middle align-items-center">Next based on NO:: <div style="display:inline-block;" id="response3"> Answer block3 </div></div>
-  </div> -->
-  <div class="row align-items-center" id="row">
-    <div class="col-md-12 align-middle align-items-center text-center"><a href="/question?scid=14&section=r">View Summary</a></div>
+  <hr class="style5">
+  <div class="row align-items-center" style="justify-content: center;" id="row">
+    <div class="col-md-3 align-middle align-items-center text-center"><a href="/question?scid=14&section=r">Results</a></div>
+    <div class="col-md-3 align-middle align-items-center text-center"><a href="/question?scid=14&section=r">Next Section</a></div>
+    <div class="col-md-3 align-middle align-items-center text-center"><a href="/question?scid=14&section=r">View Summary</a></div>
   </div>
-</div>
 {% endwith %}
 
 
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+  setColors();
+  });
 
   function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -83,6 +98,30 @@
       }
     }
   });
+
+  function setColors() {
+    var section = document.getElementById("qsection").innerHTML
+    var type = document.getElementById("qtype").innerHTML
+    var level = document.getElementById("qlevel").innerHTML
+    if (type == "process") {
+      document.getElementById("row").style.backgroundColor = "#dfe7fd";
+    } else if (type == "people") {
+      document.getElementById("row").style.backgroundColor = "#ecf39e";
+    } else {
+      document.getElementById("row").style.backgroundColor = "#eae0d5";
+    }
+
+    if (level == "1") {
+      document.getElementById("qlevel").style.backgroundColor = "#ecf39e";
+    } else if (level == "2") {
+      document.getElementById("qlevel").style.backgroundColor = "#ffc971";
+    } else {
+      document.getElementById("qlevel").style.backgroundColor = "#fad2e1";
+    }
+    document.getElementById("qlevel").style.color = "#0b132b";
+
+  } 
+  
 
   function scoreUpdate(asessment, next, user, answer) {
 
@@ -118,30 +157,21 @@
     // document.getElementById("response2").innerHTML = test_val[0].yquest;
     // document.getElementById("response3").innerHTML = test_val[0].nquest;
     document.getElementById("questnbr").value = test_val[0].question_id;
+    document.getElementById("qsection").innerHTML = test_val[0].section__name;
+    document.getElementById("qlevel").innerHTML = test_val[0].level;
+    document.getElementById("qtype").innerHTML = test_val[0].type;
+
+
+    setColors();
     console.log("questnbr updated to ", test_val[0].question_id);
-    if (test_val[0].question_id == 99999){
+    if (test_val[0].question_id == 999999){
       // go to view summary
       window.location.href = "/question?scid=14&section=r";
     }
-
-    
     });
-
-    // var eley = 'assChky1', elen = 'assChkn1';
-    // if (answer==0) {
-    //   document.getElementById(eley).classList.remove('btn-success');
-    //   document.getElementById(elen).classList.remove('btn-secondary');
-    //   document.getElementById(eley).classList.add('btn-secondary');
-    //   document.getElementById(elen).classList.add('btn-danger');
-    // }
-    // if (answer==1) {
-    //   document.getElementById(eley).classList.remove('btn-secondary');
-    //   document.getElementById(eley).classList.add('btn-success');
-    //   document.getElementById(elen).classList.remove('btn-danger');
-    //   document.getElementById(elen).classList.add('btn-secondary');
-    // }
-
   }
+
+  
   </script>
 	
 {% endblock content %}
