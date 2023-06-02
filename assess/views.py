@@ -157,8 +157,11 @@ def engagement(request):
     return HttpResponse(template.render(context, request))
 
 def goals(request):
+    apiserver = os.environ['API_SERVER']
+    context = {'title': 'STRATEGICUS',
+               'apiserver': apiserver,}
     if request.GET.get('stage') == 'd':
         template = loader.get_template('assess/drill_goals.html')
     else:
         template = loader.get_template('assess/goals.html')
-    return HttpResponse(template.render({}, request))
+    return HttpResponse(template.render(context, request))

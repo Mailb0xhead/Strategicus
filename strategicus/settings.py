@@ -30,7 +30,7 @@ SECRET_KEY = os.environ['SECRET_KEY'] # Instead of your actual secret key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.208','test.geekfest.live',]
+ALLOWED_HOSTS = ['192.168.0.208','localhost',]
 
 
 # Application definition
@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'strategicus.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "HOST": "192.168.0.99",
+        "HOST": os.environ['DB_ADDRESS'],
         # "HOST": "cs.geekfestclan.com",
         "PORT": "3306",
         "NAME": "strategicus",
@@ -100,7 +100,7 @@ DATABASES = {
     }
 }
 
-pymysql.version_info = (1, 4, 2, "final", 0)
+pymysql.version_info = (1, 4, 3, "final", 0)
 pymysql.install_as_MySQLdb()
 
 
