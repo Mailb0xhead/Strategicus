@@ -54,6 +54,7 @@ def question(request):
             quest_data = json.dumps(list(queryset), cls=DjangoJSONEncoder)
             
             new_score = serializer.data['answer']
+
             try:
                 curr_score = Scores.objects.get(ass_id=assess_id, question_id=quest_id, user_id=userid)
                 curr_score.score = new_score
@@ -64,6 +65,7 @@ def question(request):
                  curr_score = Scores.objects.create(ass_id=assess_id, question_id=quest_id, score=new_score, create_date=datetime.date.today(), user_id=userid)
                  curr_score.save()
                  return Response(quest_data, status=status.HTTP_201_CREATED)
+
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
     
