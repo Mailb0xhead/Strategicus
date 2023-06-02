@@ -1,4 +1,4 @@
-
+__pycache__/
 .env
 assess/__pycache__/apiviews.cpython-39.pyc
 assess/__pycache__/views.cpython-39.pyc
@@ -6,3 +6,4 @@ assess/__pycache__/urls.cpython-39.pyc
 assess/__pycache__/classes.cpython-39.pyc
 assess/__pycache__/apiviews.cpython-39.pyc
 todo.txt
+assess/__pycache__/__init__.cpython-311.pyc
