@@ -5,8 +5,8 @@ from django.db.models import F
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Components, Subcomps, Assessments, Questions, Scores, Resources, Outcomes, Engagements
-from .classes import assess, engage
+from .models import Components, Subcomps, Assessments, Questions, Scores, Resources, Outcomes, Engagements, Goals
+from .classes import assess, engage, ll_goal, goal
 import os
 import openai
 
@@ -20,6 +20,11 @@ def index(request):
         context = {'title': 'STRATEGICUS',
                 }
         return HttpResponse(template.render(context, request))
+    
+def profile(request):
+    template = loader.get_template('assess/profile.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 def ai(request):
     template = loader.get_template('assess/ai.html')
@@ -160,8 +165,41 @@ def goals(request):
     apiserver = os.environ['API_SERVER']
     context = {'title': 'STRATEGICUS',
                'apiserver': apiserver,}
-    if request.GET.get('stage') == 'd':
+    goals = Goals.objects.values('goal_id','goal','duration','priority','roll_up_id').filter(user=request.user)
+    if request.GET.get('stage') == 'd' and len(goals) > 0:
         template = loader.get_template('assess/drill_goals.html')
+        goals = Goals.objects.values('goal_id','goal','duration','priority','roll_up_id').filter(user=request.user)
+        thisGoal = goal(goals.filter(duration='LL'))
+        for ll in thisGoal.ll_goals:
+            if ll.id == -1:
+                ll.add_lt_goal(goals.filter(duration='LT'))
+            else:    
+                ll.add_lt_goal(goals.filter(duration='LT', roll_up_id=ll.id))
+            for lt in ll.lt_goals:
+                if lt.id == -1:
+                    lt.add_mt_goal(goals.filter(duration='MT'))
+                else:
+                    lt.add_mt_goal(goals.filter(roll_up_id=lt.id, duration='MT'))
+                for mt in lt.mt_goals:
+                    if mt.id == -1:
+                        mt.add_st_goal(goals.filter(duration='ST'))    
+                    else:
+                        mt.add_st_goal(goals.filter(roll_up_id=mt.id, duration='ST'))
+                    for st in mt.st_goals:  
+                        if st.id == -1:
+                            st.add_tk_goal(goals.filter(duration='TK'))
+                        else:
+                            st.add_task(goals.filter(roll_up_id=st.id, duration='TK'))
+        context['goals']=thisGoal
+    elif request.GET.get('stage') == 'a' and len(goals) > 0:
+        curr_goal = goals.filter(priority=1)[0]
+        lower_goal = goals.filter(roll_up_id=curr_goal['goal_id'])
+        higher_goal = goals.filter(roll_up_id=curr_goal['roll_up_id'])
+        context['curr_goal']=curr_goal
+        context['higher_goal'] = higher_goal
+        context['lower_goal'] = lower_goal
+        template = loader.get_template('assess/goals_align.html')
     else:
+        context['goals']=goals
         template = loader.get_template('assess/goals.html')
     return HttpResponse(template.render(context, request))
