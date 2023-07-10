@@ -21,23 +21,23 @@
   <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Next we need to align goals to each other.</h4>
   <p id="gInstr" class="text-center">Choose smaller goals that help achieve this goal and link this goal to a bigger picture goal.</p>
 </div>
-<div class="col-sm-3">
-    <div class="container col-sm-3">
+<div class="container">
+  <div class="col-sm-3" style="width:32%;">
         <div id="goalHead" class="bg-secondary">HIGHER GOALS:</div>
         <div id="goalBig" class="border">
             <div>HIGH {{higher_goal.goal}}</div>
-        </div>
     </div>
-    <div class="col-sm-3">
-        <div class="container col-sm-3">
+  </div>
+  <div class="container">
+    <div class="col-sm-3" style="width:32%;">
             <div id="goalHead" class="bg-secondary">GOAL TO ALIGN:</div>
             <div id="goalThis" class="border">
                 <div>CURR {{curr_goal.goal}}</div>
             </div>
         </div>
     </div>
-    <div class="col-sm-3">
-        <div class="container col-sm-3">
+    <div class="container">
+      <div class="col-sm-3" style="width:32%;">
             <div id="goalHead" class="bg-secondary">ENABLING GOALS:</div>
             <div id="goalSmall" class="border">
             {% for g in lower_goal %}
