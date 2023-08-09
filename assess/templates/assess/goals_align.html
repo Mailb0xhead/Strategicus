@@ -17,48 +17,36 @@
 
     </script>
 <div class="col-sm-10">
-  <h2 class="text-center">Goals</h2>
-  <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Start by entering some goals you would like to achieve.</h4>
-  <p id="gInstr" class="text-center">They can be something you can get done tomorrow or something that will take you a lifetime.  At this step, it's more important to just list some goals you want to acheive than to worry about perfecting your life's aspirations.</p>
+  <h2 class="text-center">Align Goals</h2>
+  <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Next we need to align goals to each other.</h4>
+  <p id="gInstr" class="text-center">Choose smaller goals that help achieve this goal and link this goal to a bigger picture goal.</p>
 </div>
-    <div id="listId2" class="col-sm-10">
-      {% for x in "0123456789" %}
-      <div id="itemNo{{forloop.counter}}" class="listitem box cellrow" name="goalNbr{{forloop.counter}}">
-        <div id="goalSort" class="cell goalSort" style="display:none;"><i class="bi bi-justify"></i></div>
-        <div class="cell">{{forloop.counter}}.</div>
-        <div class="input-group">
-          <div class="input-group-prepend"><span class="input-group-text activeText">Goal:</span> </div>
-          <input type="text" class="form-control text" placeholder="Type One of Your Goals Here..." aria-label="Goal:" aria-describedby="basic-addon1" id="txtGoal{{forloop.counter}}">
-        </div>
-        <div class="input-group goalTime" id="goalTime" style="width:25%; display:none;">
-          <div class="input-group" id="">
-            <div class="input-group-prepend"><span class="input-group-text lblTime">Timing</span> </div>
-            <select name="gTime{{forloop.counter}}" id="gTime" class="custom-select form-control level">
-                <option value="XX">Select Timing</option>
-                <option value="TK">About 1 week</option>
-                <option value="ST">About 1 - 2 months</option>
-                <option value="MT">6 months to a year</option>
-                <option value="LT">A few years</option>
-                <option value="LL">More than 5 years</option>
-            </select>
-          
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+<div class="container">
+  <div class="col-sm-3" style="width:32%;">
+        <div id="goalHead" class="bg-secondary">HIGHER GOALS:</div>
+        <div id="goalBig" class="border">
+            <div>HIGH {{higher_goal.goal}}</div>
     </div>
-  <div class="height"></div>
-  <div class="col-sm-10 text-center">
-    <button id="btnNext" type="button" class="btn btn-primary" onclick="btnNext();" style="margin: 5px; width:125px;">
-        Next  <i class="bi bi-arrow-right"></i> </button>
-      <button id="btnSave"  type="button" class="btn btn-primary" onclick="saveGoals();" style="margin: 5px; width:125px; display:none;">
-        <i class="bi bi-save"></i>  Save</button>
-  </div>     
-  <div class="height"></div>
-    <!-- <div class="" id="outputDiv">
-        <b>Output of ID's of images : </b>
-        <input id="outputvalues" type="text" value="" />
-    </div> -->
+  </div>
+  <div class="container">
+    <div class="col-sm-3" style="width:32%;">
+            <div id="goalHead" class="bg-secondary">GOAL TO ALIGN:</div>
+            <div id="goalThis" class="border">
+                <div>CURR {{curr_goal.goal}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+      <div class="col-sm-3" style="width:32%;">
+            <div id="goalHead" class="bg-secondary">ENABLING GOALS:</div>
+            <div id="goalSmall" class="border">
+            {% for g in lower_goal %}
+                <div class="border">LOW {{g.goal}}</div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
   
   <script>
 

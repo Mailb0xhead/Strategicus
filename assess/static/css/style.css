@@ -267,6 +267,7 @@ body {
 
   .cellrow {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .cellrow .cell {

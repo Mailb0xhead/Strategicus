@@ -24,73 +24,81 @@
 </div>
 
 <div class="container">
-<!-- Goal Selector -->
-  <div id="listId1" class="col-md-12">
-    <div id="LLcont1" class="box row-fluid box">
-      <div id="LL1" class="LL listitem box cellrow" name="xxx">
-        <div id="LLT1" class="col-md-2" style="">Life Long Goal</div>
-        <div id="LTcont1" class="box row-fluid" name="xxx">
-            <div id="LT1" class="LT listitem box cellrow" name="xxx">
-              <div id="LTT1" class="col-md-2" style="">Long Term Goal</div>
-
-              <div id="MTcont1" class="box row-fluid" name="xxx">
-                <div id="MT1" class="MT listitem box cellrow" name="xxx">
-                  <div id="MTT1" class="col-md-2" style="">Mid Term Goal</div>
-                  <i class="bi bi-chevron-down toggle-icon"></i>
-                  <div id="ST1" class="box row-fluid" name="xxx">
-                      <div id="STcont1" class="ST listitem box cellrow" name="xxx">
-                        <div id="STT1" class="col-md-2" style="">Short Term Goal</div>
-                        <div id="TKcont1" class="box row-fluid" name="xxx">
-                          <div id="TK1" class="TK listitem box cellrow" name="xxx">
-                            <div id="TKT1" class="col-md-2" style="">Task</div>
-                          </div>
-                          <div id="TK2" class="TK listitem box cellrow" name="xxx">
-                            <div id="TKT2" class="col-md-2" style="">Task</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div id="STcont2" class="ST listitem box cellrow" name="xxx">
-                        <div id="STT2" class="col-md-2" style="">Short Term Goal</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="MTcont2" class="MT listitem box cellrow" name="xxx">
-                    <div id="MTT2" class="col-md-2" style="">Mid Term Goal</div>
-                  </div>
+  {% for ll in goals.ll_goals %}
+  <div id="LLcont{{forloop.counter}}" class="box row-fluid">
+    <div id="LL{{forloop.counter}}" class="LL listitem box cellrow" name="xxx">
+      <div id="LLT{{forloop.counter}}" class="col-md-2 small text-secondary" style="">Life Long Goal</div>
+      <i id="LT" class="bi bi-chevron-down toggle-icon small"></i>
+      <div id="LLtxt{{forloop.counter}}" class="col-md-10" style="">{{ll.name}}</div>
+      {% for lt in ll.lt_goals %}
+        <div id="LTcont{{forloop.counter}}" class="box row-fluid" name="xxx">
+            <div id="LT{{forloop.counter}}" class="LT listitem box cellrow" name="xxx">
+              <div id="LTT{{forloop.counter}}" class="col-md-2 small text-secondary" style="">Long Term Goal</div>
+              <i id="MT" class="bi bi-chevron-down toggle-icon small"></i>
+              <div id="LTtxt{{forloop.counter}}" class="col-md-10" style="">{{lt.name}}</div>
+        {% for mt in lt.mt_goals %}
+        <div id="MTcont{{forloop.counter}}" class="box row-fluid" name="xxx">
+          <div id="MT{{forloop.counter}}" class="LT listitem box cellrow" name="xxx">
+            <div id="MTT{{forloop.counter}}" class="col-md-2 small text-secondary" style="">Mid Term Goal</div>
+            <i id="ST" class="bi bi-chevron-down toggle-icon small"></i>
+            <div id="MTtxt{{forloop.counter}}" class="col-md-10" style="">{{mt.name}}</div>
+        {% for st in mt.st_goals %}
+        <div id="STcont{{forloop.counter}}" class="box row-fluid" name="xxx">
+          <div id="ST{{forloop.counter}}" class="LT listitem box cellrow" name="xxx">
+            <div id="STT{{forloop.counter}}" class="col-md-2 small text-secondary" style="">Short Term Goal</div>
+            <i id="TK" class="bi bi-chevron-down toggle-icon small"></i>
+            <div id="STtxt{{forloop.counter}}" class="col-md-10" style="">{{st.name}}</div>
+            {% for tk in st.tasks %}
+            <div id="TKcont{{forloop.counter}}" class="box row-fluid" name="xxx">
+              <div id="TK{{forloop.counter}}" class="TK listitem box cellrow" name="xxx">
+                <div id="TKT{{forloop.counter}}" class="col-md-2 small text-secondary" style="">Task</div>
+                <div id="TKtext{{forloop.counter}}" class="col-md-10" style="">{{tk.name}}</div>
               </div>
             </div>
-            <div id="LTcont2" class="LT listitem box cellrow" name="xxx">
-              <div id="LTT2" class="col-md-2" style="">Long Term Goal</div>
-            </div>
+            {% endfor %}
           </div>
         </div>
-    </div>
-    <div id="LT" class="listitem box cellrow" name="xxx">
-      <div id="goalSort" class="cell box " style="">Long Term Goal</div>
-    </div>
-    <div id="MT" class="listitem box cellrow" name="xxx">
-      <div id="goalSort" class="cell box " style="">Mid Term Goal</div>
-    </div>
-    <div id="ST" class="listitem box cellrow" name="xxx">
-      <div id="goalSort" class="cell box " style="">Short Term Goal</div>
-    </div>
-    <div id="TK" class="listitem box cellrow" name="xxx">
-      <div id="goalSort" class="cell box " style="">Task</div>
+          {% endfor %}
+        </div>
+        </div>
+        {% endfor %}
+      </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
-
+  {% endfor %}
 </div>
+
 
   <div class="height"></div>
   
   <script>
 $(document).ready(function() {
+  $("[id^='LTcont'], [id^='MTcont'], [id^='STcont']").hide();
   $('.toggle-icon').on('click', function() {
-    console.log('clicked')
-    $('#ST1').toggle();
+    var parent = $(this).parent().parent();
+    var prefix = $(this).attr('id').substr(0,2)+'cont';
+    console.log('prefix',prefix,'parent',parent);
+    var sections = parent.find("[id^=" + prefix + "]");
+    console.log('sections',sections);
+    sections.toggle();
     $(this).toggleClass('bi-chevron-down bi-chevron-right');
   });
 });
+
+var parent = $(this).parent().parent();
+var prefix = $(this).attr('id').substr(0,2)+'cont';
+var sections = parent.find("[id^=" + prefix + "]");
+if (sections.length > 0) {
+  console.log('Found ' + sections.length + ' sections');
+  sections.toggle();
+  $(this).toggleClass('bi-chevron-down bi-chevron-right');
+} else {
+  console.log('No sections found');
+}
+
+
   </script>
 
 

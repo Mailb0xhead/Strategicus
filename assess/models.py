@@ -46,6 +46,7 @@ class Goals(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     goal = models.CharField(max_length=500, blank=True, null=True)
     duration = models.CharField(max_length=2, blank=True, null=True)
+    priority = models.IntegerField(blank=True, null=True)
     roll_up = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='f_rollup')
     break_down = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='f_breakdown')
     create_date = models.DateField(blank=True, null=True)
