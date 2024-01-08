@@ -4,144 +4,196 @@
 {% block title %}{{title}}{% endblock title %}
 
 {% block content %}
+<link href="{% static 'css/hexamenu.css' %}" rel="stylesheet" type="text/css">
 
-    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="{% static 'scripts/api.js' %}"></script>
-    <script src="{% static 'scripts/main.js' %}"></script>
-    <script src="{% static 'scripts/dnd.js' %}"></script>
-    <script>
-
-
-
-    </script>
-<div class="col-sm-10">
-  <h2 class="text-center">Goals</h2>
-  <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Start by entering some goals you would like to achieve.</h4>
-  <p id="gInstr" class="text-center">They can be something you can get done tomorrow or something that will take you a lifetime.  At this step, it's more important to just list some goals you want to acheive than to worry about perfecting your life's aspirations.</p>
-</div>
-    <div id="listId2" class="col-sm-10">
-      {% for x in "0123456789" %}
-      <div id="itemNo{{forloop.counter}}" class="listitem box cellrow" name="goalNbr{{forloop.counter}}">
-        <div id="goalSort" class="cell goalSort" style="display:none;"><i class="bi bi-justify"></i></div>
-        <div class="cell">{{forloop.counter}}.</div>
-        <div class="input-group">
-          <div class="input-group-prepend"><span class="input-group-text activeText">Goal:</span> </div>
-          <input type="text" class="form-control text" placeholder="Type One of Your Goals Here..." aria-label="Goal:" aria-describedby="basic-addon1" id="txtGoal{{forloop.counter}}">
-        </div>
-        <div class="input-group goalTime" id="goalTime" style="width:25%; display:none;">
-          <div class="input-group" id="">
-            <div class="input-group-prepend"><span class="input-group-text lblTime">Timing</span> </div>
-            <select name="gTime{{forloop.counter}}" id="gTime" class="custom-select form-control level">
-                <option value="XX">Select Timing</option>
-                <option value="TK">About 1 week</option>
-                <option value="ST">About 1 - 2 months</option>
-                <option value="MT">6 months to a year</option>
-                <option value="LT">A few years</option>
-                <option value="LL">More than 5 years</option>
-            </select>
-          
-          </div>
-        </div>
+  <!-- <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <ul class="nav nav-pills justify-content-center"></ul>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Option 1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Option 2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Option 3</a>
+          </li>
+        </ul>
       </div>
-      {% endfor %}
     </div>
-  <div class="height"></div>
-  <div class="col-sm-10 text-center">
-    <button id="btnNext" type="button" class="btn btn-primary" onclick="btnNext();" style="margin: 5px; width:125px;">
-        Next  <i class="bi bi-arrow-right"></i> </button>
-      <button id="btnSave"  type="button" class="btn btn-primary" onclick="saveGoals();" style="margin: 5px; width:125px; display:none;">
-        <i class="bi bi-save"></i>  Save</button>
-  </div>     
-  <div class="height"></div>
-    <!-- <div class="" id="outputDiv">
-        <b>Output of ID's of images : </b>
-        <input id="outputvalues" type="text" value="" />
-    </div> -->
+  </div> -->
+
   
-  <script>
-
-    function btnNext() {
-      const g = document.querySelectorAll(".goalSort");
-      const g2 = document.querySelectorAll(".goalTime");
-
-      var x = document.getElementById("goalTime");
-      var y = document.getElementById("goalSort");
-
-      if (x.style.display === "none") {
-        for (const goal of g2) {
-          goal.style.display = "block";
-          fieldActive(".lblTime");
-        }
-        document.getElementById("gStep").innerHTML = "<i class='bi bi-2-circle-fill'></i>  Next, select how long you think it will take to achieve each goal.";
-        document.getElementById("gInstr").innerHTML = "This is just a rough estimate.  You can change it later if you want.";
-      } else {
-        fieldActive(".goalSort");
-        for (const goal of g) {
-          goal.style.display = "block";
-        }
-        document.getElementById("gStep").innerHTML = "<i class='bi bi-3-circle-fill'></i>  Finally, drag and drop your goals into the order you want to achieve them.";
-        document.getElementById("gInstr").innerHTML = "You can change this later if you want.";
-        document.getElementById("btnNext").style.display = "none";
-        document.getElementById("btnSave").style.display = "inline-block";
-
-      }
-    }
-
-    function fieldActive(newFld) {
-        const ele = document.querySelectorAll(".activeText");
-        ele.forEach(function (e) {
-          e.classList.remove("activeText");
-        });
-        const ele2 = document.querySelectorAll(newFld);
-        ele2.forEach(function (e) {
-          e.classList.add("activeText");
-        });
-      }
-
-
- 
-
-      function saveGoals(){
-        var form = new FormData();
-        var goals = [];
-        var goalTimes = [];
-        var userId = {{user.id}};
-        $('#' + 'listId2' + ' .listitem').each(function(index) {
-          goals.push($(this).find('input').val());
-          goalTimes.push($(this).find('select').val());
-        });
-        jGoals = JSON.stringify({ data: goals });
-        jTimes = JSON.stringify({ data: goalTimes });
-        form.append("goals", jGoals);
-        form.append("goalTimes", jTimes);
-        form.append("userId", userId);
-
-        console.log('goals:  ',goals);
-        console.log('goalTimes:  ',goalTimes);
-
-        var settings = {
-        "url": "http://{{apiserver}}/api/goalapi/",
-        "method": "POST",
-        "timeout": 0,
-        "processData": false,
-        "mimeType": "multipart/form-data",
-        "contentType": false,
-        "data": form,
-        };
-
-        $.ajax(settings).done(function (response) {
-        let answer = JSON.parse(response);
-        let text = answer.choices[0].text;
-        console.error(answer);
-        console.log(text);
-      });
-    };
-
-    </script>
-
-
+  <main class="site-wrapper">
+    <div class="pt-table desktop-768">
+      <div class="pt-tablecell page-home relative" style="">
+                      <div class="overlay"></div>
+  
+                      <div class="container" style="padding-top: 10px;">
+                          <div class="row">
+                              <div class="col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+                                  <div class="page-title  home text-center">
+                                    <span class="heading-page"> Goals
+                                    </span>
+                                      <p class="mt20">Goals are the key to being strategic.  Please pick where you want to get started.</p>
+                                  </div>
+  
+                                  <div class="hexagon-menu clear">
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a href="/goals?stage=p" class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-universal-access"></i>
+                                                  </span>
+                                                  <span class="title">Find Goals</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>
+                                      </div>
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a href="/goals?stage=d" class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-bullseye"></i>
+                                                  </span>
+                                                  <span class="title">View Goals</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>
+                                      </div>
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a href="/goals?stage=a" class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-braille"></i>
+                                                  </span>
+                                                  <span class="title">Drill Down</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>    
+                                      </div>
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a href="/goals?stage=d" class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-id-badge"></i>
+                                                  </span>
+                                                  <span class="title">Drill Down</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>
+                                      </div>
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a  class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-life-ring"></i>
+                                                  </span>
+                                                  <span class="title">Works</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>
+                                      </div>
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a  class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-clipboard"></i>
+                                                  </span>
+                                                  <span class="title">Testimonials</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>
+                                      </div>
+                                      <div class="hexagon-item">
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <div class="hex-item">
+                                              <div></div>
+                                              <div></div>
+                                              <div></div>
+                                          </div>
+                                          <a  class="hex-content">
+                                              <span class="hex-content-inner">
+                                                  <span class="icon">
+                                                      <i class="fa fa-map-signs"></i>
+                                                  </span>
+                                                  <span class="title">Contact</span>
+                                              </span>
+                                              <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1e2530"></path></svg>
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+    </main>
 
 
 

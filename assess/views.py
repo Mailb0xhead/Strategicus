@@ -124,8 +124,17 @@ def question(request):
                                     .filter(subcomp_id=scid)\
                                     .order_by('section_id','level','type'))
         question_list.add_scores(Scores.objects.values('question_id','score').filter(ass_id=assid, question_id__in=question_list.quest_ids))
-        question_list.add_actions(Scores.objects.annotate(actions=F('question_id__outcome_id__outcome')).values('actions','question_id__outcome_id')\
-                                  .filter(question_id__subcomp_id=scid, score=0))
+        test = (Scores.objects.annotate(actions=F('question_id__outcome_id__outcome'),
+                                                          priority=F('question_id__outcome_id__priority'),
+                                                          benefit=F('question_id__outcome_id__benefit'))\
+                                  .values('actions','priority','benefit','question_id__outcome_id')
+                                  .filter(question_id__subcomp_id=scid, score=0).distinct())
+        print(test.query)
+        question_list.add_actions(Scores.objects.annotate(actions=F('question_id__outcome_id__outcome'),
+                                                          priority=F('question_id__outcome_id__priority'),
+                                                          benefit=F('question_id__outcome_id__benefit'))\
+                                  .values('actions','priority','benefit','question_id__outcome_id')
+                                  .filter(question_id__subcomp_id=scid, score=0).order_by('priority').distinct())
     else:
         resp_text = "No Subcomp Id"
         return redirect('accounts/login')
@@ -161,44 +170,87 @@ def engagement(request):
                 }
     return HttpResponse(template.render(context, request))
 
+def calc_duration(duration):
+    if duration == 'LL':
+        return 'XX','LT'
+    elif duration == 'LT':
+        return 'LL','MT'
+    elif duration == 'MT':
+        return 'LT','ST'
+    elif duration == 'ST':
+        return 'MT','TK'
+    else:
+        return 'ST','XX'
+
+
 def goals(request):
     apiserver = os.environ['API_SERVER']
     context = {'title': 'STRATEGICUS',
                'apiserver': apiserver,}
-    goals = Goals.objects.values('goal_id','goal','duration','priority','roll_up_id').filter(user=request.user)
+    goals = Goals.objects.values('goal_id','goal','goal_type_id__goal_abbv','goal_type_id__goal_name','priority','roll_up_id').filter(user=request.user)
+    # print(goals.query)
+    # print(len(goals))
+    
     if request.GET.get('stage') == 'd' and len(goals) > 0:
         template = loader.get_template('assess/drill_goals.html')
-        goals = Goals.objects.values('goal_id','goal','duration','priority','roll_up_id').filter(user=request.user)
-        thisGoal = goal(goals.filter(duration='LL'))
+        # goals = Goals.objects.values('goal_id','goal','duration','priority','roll_up_id').filter(user=request.user)
+        thisGoal = goal(goals.filter(goal_type_id__goal_abbv='LL'))
         for ll in thisGoal.ll_goals:
             if ll.id == -1:
-                ll.add_lt_goal(goals.filter(duration='LT'))
+                ll.add_lt_goal(goals.filter(goal_type_id__goal_abbv='LT'))
             else:    
-                ll.add_lt_goal(goals.filter(duration='LT', roll_up_id=ll.id))
+                ll.add_lt_goal(goals.filter(goal_type_id__goal_abbv='LT', roll_up_id=ll.id))
             for lt in ll.lt_goals:
                 if lt.id == -1:
-                    lt.add_mt_goal(goals.filter(duration='MT'))
+                    lt.add_mt_goal(goals.filter(goal_type_id__goal_abbv='MT'))
                 else:
-                    lt.add_mt_goal(goals.filter(roll_up_id=lt.id, duration='MT'))
+                    lt.add_mt_goal(goals.filter(roll_up_id=lt.id, goal_type_id__goal_abbv='MT'))
                 for mt in lt.mt_goals:
                     if mt.id == -1:
-                        mt.add_st_goal(goals.filter(duration='ST'))    
+                        mt.add_st_goal(goals.filter(goal_type_id__goal_abbv='ST'))    
                     else:
-                        mt.add_st_goal(goals.filter(roll_up_id=mt.id, duration='ST'))
+                        mt.add_st_goal(goals.filter(roll_up_id=mt.id, goal_type_id__goal_abbv='ST'))
                     for st in mt.st_goals:  
                         if st.id == -1:
-                            st.add_tk_goal(goals.filter(duration='TK'))
+                            st.add_tk_goal(goals.filter(goal_type_id__goal_abbv='TK'))
                         else:
-                            st.add_task(goals.filter(roll_up_id=st.id, duration='TK'))
+                            st.add_task(goals.filter(roll_up_id=st.id, goal_type_id__goal_abbv='TK'))
         context['goals']=thisGoal
     elif request.GET.get('stage') == 'a' and len(goals) > 0:
-        curr_goal = goals.filter(priority=1)[0]
+        if request.GET.get('goal_id') == None:          # Set the default goal to the first goal priority in the list
+            curr_goal = goals.filter(priority=0)[0]
+        else:
+            curr_goal = goals.filter(goal_id=request.GET.get('goal_id'))[0]
+        h_goal = curr_goal['roll_up_id']
         lower_goal = goals.filter(roll_up_id=curr_goal['goal_id'])
-        higher_goal = goals.filter(roll_up_id=curr_goal['roll_up_id'])
+        higher_duration, lower_duration  = calc_duration(curr_goal['goal_type_id__goal_abbv'])
+        if lower_goal:
+            other_l_goals = goals.filter(goal_type_id__goal_abbv=lower_duration, roll_up_id=None).exclude(roll_up_id = curr_goal['goal_id'])
+        else:
+            other_l_goals = goals.filter(goal_type_id__goal_abbv=lower_duration, roll_up_id=None)
+        print('other l_goals',other_l_goals, lower_goal)
+        if not other_l_goals.exists() and not lower_goal.exists():
+            lower_goal = 'None'
+            
+        print(other_l_goals, lower_goal)
+        if h_goal == None:
+            print('no higher goal')
+            higher_goal = 'None'
+        else:
+            higher_goal = goals.filter(goal_id=h_goal)[0]
+        other_h_goals = goals.filter(goal_type_id__goal_abbv=higher_duration, roll_up_id=None).exclude(goal_id = h_goal)
+        print(other_h_goals)
+        # higher_goal = goals.get(goal_id=h_goal)
+        print('curr:',curr_goal,'low:', lower_goal,'high:', higher_goal)
         context['curr_goal']=curr_goal
+        context['other_goals']=other_l_goals
         context['higher_goal'] = higher_goal
+        context['other_h_goals'] = other_h_goals
         context['lower_goal'] = lower_goal
         template = loader.get_template('assess/goals_align.html')
+    elif request.GET.get('stage') == 'p':
+        context['goals']=goals
+        template = loader.get_template('assess/goalsetter.html')
     else:
         context['goals']=goals
         template = loader.get_template('assess/goals.html')

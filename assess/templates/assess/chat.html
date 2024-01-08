@@ -1,0 +1,36 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+<h1>Chatbot Demo</h1>
+<form method="post" id="chat-form">
+    {% csrf_token %}
+    <label for="message">Message:</label>
+    <input type="text" name="message" id="message" autocomplete="off">
+    <button type="submit">Send</button>
+</form>
+<div id="chat-log"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#chat-form').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/chat/',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(data) {
+                    $('#chat-log').append('<p><strong>You:</strong> ' + $('#message').val() + '</p>');
+                    $('#chat-log').append('<p><strong>Bot:</strong> ' + data.bot_response + '</p>');
+                    $('#message').val('');
+                }
+            });
+        });
+    });
+</script>
+
+
+{% endblock content %}

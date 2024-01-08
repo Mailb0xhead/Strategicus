@@ -6,117 +6,155 @@
 {% block content %}
 
 <div class="d-flex flex-column justify-content-center" id="">
-  <div class="pt-3 mx-auto"><h1>Welcome to</h1></div>
-  <div class="pt-3 mx-auto"><img src="{% static 'images/sus.png' %}" alt="- no icon -" height=200px /></div>
-  <div class="col-md-5 pt-3 mx-auto">
-    <h4 class="p-3 text-center">This page will give you access to our experiments with Openai.  We are training it to be your strategic advisor!
-    </h4>
-  </div>
-  {% if airesponse == 'not logged in' %}
-      <div class="mx-auto col-md-5" style="padding-top: 100px;"><h4 style="padding:20px; background-color: #9a877876;">You must be logged in to use ai features</h4></div>
-  {% else %}
-    <div class="mx-auto col-md-8" style="padding-top: 100px;"><h1 style="padding:20px; background-color: #9a877876;">Basic Chat</h1></div>
+  <div class="pt-3 mx-auto"><h1 style="margin-bottom: -50px;">Welcome to</h1></div>
+  <!-- <div class="pt-3 mx-auto"><img src="{% static 'images/sus.png' %}" alt="- no icon -" height=200px /></div> -->
+  <div class="pt-3 mx-auto"><img src="{% static 'images/mailboxhead.png' %}" alt="- no icon -" height=200px /></div>
+  <div class="pt-3 mx-auto"><h4 class="text-center" style="margin-top:-75px;">Our AI enabled strategic chatbot</h4></div>
+  
+    <div class="col-md-5 pt-3 mx-auto">
+      <h4 class="p-3 text-center">This page will give you access to our experiments with Openai.  We are training it to be your strategic advisor!
+      </h4>
+    </div>
+    {% if airesponse == 'not logged in' %}
+        <div class="mx-auto col-md-5" style="padding-top: 100px;"><h4 style="padding:20px; background-color: #9a877876;">You must be logged in to use ai features</h4></div>
+    {% else %}
+          <div class="mx-auto col-md-10" style="padding-top: 20px;"><h1 style="padding:20px; background-color: #9a877876;">Basic Chat</h1></div>
 
-    <div class="mx-auto col-md-8" style="padding-top: 10px; ">
-        <form action="/ai_old/" method="post" id="aiForm">
-            {% csrf_token %} 
-            <div class="input-group mb-3 mx-auto col-md-8">
-                <input type="text" id="aiPrompt" class="form-control" placeholder="Your question" aria-label="Your question" aria-describedby="basic-addon2" name="aiprompt" size="800">
-                <div class="input-group-append">
-                  <span class="input-group-text" id="basic-addon2">Ask Ai</span>
-                </div>
-            </div>
-
-            <!-- <div>Response:  {{airesponse.choices.0.text}}</div> -->
-            <div id="aiResponse" class="airesponse">
-              <!-- AI: {{airesponse.choices.0.text}} --> 
-            </div>
-            
-          </form>
-        </div>
-</div>
-
+          <div class="mx-auto col-md-10" style="padding-top: 10px; ">
+              <form action="/ai_old/" method="post" id="aiForm">
+                  {% csrf_token %} 
+                  <div class="chat-container">
+                    <div id="aiResponse" class="airesponse">
+                      <div class="chat-bubble ai-bubble chat-bubble-container ai-bubble-container">
+                        <p class="chat-text">Hi there! I'm your strategic advisor. How can I help you today?</p>
+                      </div>
+                    </div>
+                    <div class="chat-bubble user-bubble chat-bubble-container user-bubble-container">
+                      <input type="text" id="aiPrompt" class="form-control chat-input" placeholder="Type your message here..." aria-label="Your question" aria-describedby="basic-addon2" name="aiprompt" size="800">
+                      <button type="submit" class="btn btn-primary chat-send">Send</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+      </div>
+  
   <script>
-      document.getElementById("aiPrompt").addEventListener("keydown",
-      function(event) {
-          if (!event) {
-            var event = window.event;
-          }
-          if (event.keyCode == 13){
-            event.preventDefault();
-            ask_ai();
-          }
-      }, false);
+    document.getElementById("aiForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      ask_ai();
+    });
 
-      function csrfSafeMethod(method) {
+    function csrfSafeMethod(method) {
       // these HTTP methods do not require CSRF protection
       return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-      }
-      function sameOrigin(url) {
-        // test that a given url is a same-origin URL
-        // url could be relative or scheme relative or absolute
-        var host = document.location.host; // host + port
-        var protocol = document.location.protocol;
-        var sr_origin = '//' + host;
-        var origin = protocol + sr_origin;
-        // Allow absolute or scheme relative URLs to same origin
-        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-          (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-          // or any other URL that isn't scheme relative or absolute i.e relative.
-          !(/^(\/\/|http:|https:).*/.test(url));
-      }
+    }
 
-      $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-          if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-            // Send the token to same-origin, relative URLs only.
-            // Send the token only if the method warrants CSRF protection
-            // Using the CSRFToken value acquired earlier
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-          }
+    function sameOrigin(url) {
+      // test that a given url is a same-origin URL
+      // url could be relative or scheme relative or absolute
+      var host = document.location.host; // host + port
+      var protocol = document.location.protocol;
+      var sr_origin = '//' + host;
+      var origin = protocol + sr_origin;
+      // Allow absolute or scheme relative URLs to same origin
+      return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e relative.
+        !(/^(\/\/|http:|https:).*/.test(url));
+    }
+
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+          // Send the token to same-origin, relative URLs only.
+          // Send the token only if the method warrants CSRF protection
+          // Using the CSRFToken value acquired earlier
+          xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
         }
-      });
-    
-      function ask_ai(){
-        var form = new FormData();
-        var aiprompt = document.getElementById("aiPrompt").value;
-        var airesponse =  document.getElementById("aiResponse").textContent;
-        var newText = document.createElement("p");
-        newText.innerHTML = "You:  " + aiprompt;
-        document.getElementById("aiResponse").appendChild(newText);
-        document.getElementById("aiPrompt").value = '';
-        form.append("chat_prompt", aiprompt);
-        form.append("chat_history", airesponse);
-        form.append("type", "chat");
-        // for (var key of form.entries()) {
-        //  console.log(key[0] + ', ' + key[1]);
-        // }
-        var settings = {
-        "url": "http://192.168.0.208:777/api/ai/",
-        "method": "POST",
-        "timeout": 0,
-        "processData": false,
-        "mimeType": "multipart/form-data",
-        "contentType": false,
-        "data": form,
-        };
+      }
+    });
 
-        $.ajax(settings).done(function (response) {
-        var newText = document.createElement("p");
-        let answer = JSON.parse(response);
-        let text = answer.choices[0].text;
-        
-        newText.innerHTML = "AI:  " + text;
-        document.getElementById("aiResponse").appendChild(newText);
-        var element = document.getElementById("aiResponse");
-        element.scrollTop = element.scrollHeight;
+    function ask_ai() {
+      var aiprompt = document.getElementById("aiPrompt").value;
+      var airesponse = document.getElementById("aiResponse").getAttribute("data-chat-history");
+      var chatHistory = airesponse ? JSON.parse(airesponse) : [];
+      console.log(chatHistory);
+      var newText = document.createElement("div");
+      newText.classList.add("chat-bubble-container", "user-bubble-container");
+      newText.innerHTML = `
+        <div class="chat-bubble user-bubble">
+          <p class="chat-text">${aiprompt}</p>
+        </div>
+      `;
+      document.getElementById("aiResponse").appendChild(newText);
+      document.getElementById("aiPrompt").value = '';
+
+      var form = new FormData();
+      form.append("chat_prompt", aiprompt);
+      form.append("chat_history", JSON.stringify(chatHistory));
+      form.append("action", "chat");
+
+      fetch("/api/ai/", {
+        method: "POST",
+        body: form,
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+          let text = data;
+          chatHistory.push({ sender: "AI", message: text });
+
+          var newText = document.createElement("div");
+          newText.classList.add("chat-bubble-container", "ai-bubble-container");
+
+          // Check if the response contains a list
+          if (text.includes('1.') && text.includes('2.')) {
+            // Split the response into lines
+            let lines = text.split('\n');
+            // Create an HTML list
+            let listHtml = '<ul>';
+            for (let line of lines) {
+              // Skip blank lines
+              if (line.trim() !== '') {
+                // Add each line as a list item
+                listHtml += `<li>${line}</li>`;
+              }
+            }
+            listHtml += '</ul>';
+            // Use the list HTML for the chat bubble
+            newText.innerHTML = `
+              <div class="chat-bubble ai-bubble">
+                ${listHtml}
+              </div>
+            `;
+          } else {
+            // If the response does not contain a list, use the original formatting
+            newText.innerHTML = `
+              <div class="chat-bubble ai-bubble">
+                <p class="chat-text">${text}</p>
+              </div>
+            `;
+          }
+
+          document.getElementById("aiResponse").appendChild(newText);
+
+          var element = document.getElementById("aiResponse");
+          element.scrollTop = element.scrollHeight;
+
+          // Update chat history
+          chatHistory.push({ sender: "user", message: aiprompt });
+          document.getElementById("aiResponse").setAttribute("data-chat-history", JSON.stringify(chatHistory));
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  </script>
+
   
-        // document.getElementById("aiForm").submit();
-        //   console.log("submitted successfully....");
-      });
-    };
-
-    </script>
    {% endif %} 
 
 

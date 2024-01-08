@@ -195,11 +195,11 @@ body {
   #aiResponse {
     display: flex;
     flex-direction: column;
-    width: 1000px; 
+    /* width: 1000px;  */
     min-height: 300px; 
     background-color: lightgrey; 
     overflow-y: auto; 
-    max-height: 300px; 
+    max-height: 500px; 
     padding:5px;
     overflow-x: hidden;
     text-align:justify;
@@ -378,6 +378,82 @@ body {
     min-width: 50%
     }
 
-    .activeText {
-      background-color: #26e90c76;
-    }
+  .activeText {
+    background-color: #26e90c76;
+  }
+
+  .selected.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  /* *******************   Chatbot styles ******************* */
+
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .chat-bubble {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    /* max-width: 80%; */
+  }
+
+  .chat-text {
+    font-size: 16px;
+    margin: 10px;
+  }
+
+  .ai-bubble {
+    justify-content: flex-start;
+  }
+
+  .user-bubble {
+    justify-content: flex-end;
+  }
+
+  .chat-input {
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .chat-send {
+    width: 80px;
+  }
+
+  .chat-bubble-container {
+    display: flex;
+    /* flex-direction: column; */
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* width: 100%; */
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .chat-bubble-container.user-bubble-container {
+    align-items: flex-end;
+  }
+
+  .chat-bubble-container .chat-text {
+    margin: 0;
+  }
+
+  .chat-bubble-container.ai-bubble-container {
+    background-color: #f1f0f0;
+  }
+
+  .chat-bubble-container.user-bubble-container {
+    background-color: #9a8778;
+    color: #fff;
+  }
+
+  .modal-backdrop {
+    z-index: -1;
+  }

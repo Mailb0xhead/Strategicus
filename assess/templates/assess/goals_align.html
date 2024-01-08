@@ -5,8 +5,7 @@
 
 {% block content %}
 
-    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <script src="{% static 'scripts/api.js' %}"></script>
     <script src="{% static 'scripts/main.js' %}"></script>
@@ -21,111 +20,265 @@
   <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Next we need to align goals to each other.</h4>
   <p id="gInstr" class="text-center">Choose smaller goals that help achieve this goal and link this goal to a bigger picture goal.</p>
 </div>
+
+
 <div class="container">
-  <div class="col-sm-3" style="width:32%;">
-        <div id="goalHead" class="bg-secondary">HIGHER GOALS:</div>
-        <div id="goalBig" class="border">
-            <div>HIGH {{higher_goal.goal}}</div>
+<!--  HIGHER GOALS -->
+{% if higher_goal == 'None' %}
+  <div class="col-sm-4 px-1">
+    <div class="card bg-secondary text-white">
+      <div class="card-header" style="background-color: #c0c2c4; color:dimgrey">No Goals </div>
+      <div class="card-body" style="background-color: #e8ecf0;">
+        <div class="text-muted h_none" style="color:dimgrey"> There are no goals higher than the currently selected goal.</div>
+      </div>
+    </div>
+  {% else %}
+  <div class="col-sm-4 px-1">
+    <div class="card bg-secondary text-white">
+      <div class="card-header">{{higher_goal.goal_type_id__goal_name}} Goal(s): </div>
+      <div class="card-body" style="background-color: #f8f9fa;">
+        <div class="list-group higher" data-toggle="buttons" data-multiselectable="true">
+          {% if higher_goal == 'None' %}
+          <div class="text-muted h_none"> No Associated Higher Goal</div>
+          {% else %}
+          <div class="container" style="align-items: center;">
+            <div class="active list-group-item h_goal col-sm-11" id="lower_goal{{forloop.counter}}" onclick="toggleSelected(this,{{higher_goal.goal_id}},{{curr_goal.goal_id}},'high')">{{higher_goal.goal}}</div>
+            <div class="text-muted h_none" style="display: none;"> No Associated Higher Goal</div>
+            <div><i class="fa-solid fa-cube" style="color: #0659ea;" title="click here to drill into this goal" ondblclick="toggleDoubleSelected({{higher_goal.goal_id}})"></i></div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card bg-info text-white mt-3">
+      <div class="card-header">Unaligned {{higher_goal.goal_type_id__goal_name}} Goals:</div>
+        <div class="card-body" style="background-color: #f8f9fa;">
+          <div class="list-group h_other" data-toggle="buttons" data-multiselectable="true">
+            {% for g in other_h_goals %}
+            <div class="container" style="align-items: center;">
+              <div class="list-group-item h_goal col-sm-11" id="unaligned_goal{{forloop.counter}}" onclick="toggleSelected(this,{{g.goal_id}},{{curr_goal.goal_id}},'high')">{{g.goal}}</div>
+              <div><i class="fa-solid fa-cube" style="color: #0659ea;" title="click here to drill into this goal" ondblclick="toggleDoubleSelected({{g.goal_id}})"></i></div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  {% endif %}
+  <div class="text-center mt-3">
+    <button type="button" class="btn btn-primary" style="background-color: #bfa27e; border-color: #bfa27e;" data-bs-toggle="modal" data-bs-target="#addGoalModal">
+      <i class="fas fa-plus"></i> Add New Goal
+    </button>
+  </div>
+</div>
+
+<!--  CURRENT GOAL -->
+    <div class="col-sm-4 px-1" >
+      <div class="card bg-secondary text-white">
+        <div class="card-header">{{curr_goal.goal_type_id__goal_name}} Being Aligned:</div>
+        <div class="card-body" style="background-color: #f8f9fa;">
+              <div id="curr_goal" class="text-secondary">{{curr_goal.goal}}</div>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-primary" style="background-color: #bfa27e; border-color: #bfa27e;" data-bs-toggle="modal" data-bs-target="#editGoalModal">
+          <i class="fas fa-edit"></i> Edit Goal
+        </button>
+      </div>
+    </div>
+
+<!--  ENABLING GOALS -->
+    {% if lower_goal == 'None' %}
+    <div class="col-sm-4 px-1">
+      <div class="card bg-secondary text-white">
+        <div class="card-header" style="background-color: #c0c2c4; color:dimgrey">No Goals </div>
+        <div class="card-body" style="background-color: #e8ecf0;">
+          <div class="text-muted l_none" style="color:dimgrey"> There are no goals lower than the currently selected goal.</div>
+        </div>
+      </div>
+    </div>  
+    {% else %}
+    <div class="col-sm-4 px-1">
+      <div class="card bg-secondary text-white">
+        <div class="card-header">Associated {{lower_goal.0.goal_type_id__goal_name}} Goals:</div>
+        <div class="card-body" style="background-color: #f8f9fa;">
+          <div class="list-group lower" data-toggle="buttons" data-multiselectable="true">
+            
+            {% for g in lower_goal %}
+              <div class="container" style="align-items: center;">
+                <div class="active list-group-item col-sm-11" id="lower_goal{{forloop.counter}}" onclick="toggleSelected(this,{{g.goal_id}},{{curr_goal.goal_id}},'low')">{{g.goal}}</div>
+                <div><i class="fa-solid fa-cube" style="color: #0659ea;" title="click here to drill into this goal" ondblclick="toggleDoubleSelected({{g.goal_id}})"></i></div>
+              </div>
+            {% endfor %}
+            <div class="text-muted l_none" style="display: none;"> No Associated Enabling Goal</div>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-info text-white mt-3">
+        <div class="card-header">Unaligned {{lower_goal.0.goal_type_id__goal_name}} Goals:</div>
+          <div class="card-body" style="background-color: #f8f9fa;">
+            <div class="list-group l_other" data-toggle="buttons" data-multiselectable="true">
+              {% for g in other_goals %}
+              <div class="container" style="align-items: center;">
+                <div class="list-group-item col-sm-11" id="unaligned_goal{{forloop.counter}}" onclick="toggleSelected(this,{{g.goal_id}},{{curr_goal.goal_id}},'low')">{{g.goal}}</div>
+                <div><i class="fa-solid fa-cube" style="color: #0659ea;" title="click here to drill into this goal" ondblclick="toggleDoubleSelected({{g.goal_id}})"></i></div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-primary" style="background-color: #bfa27e; border-color: #bfa27e;" onclick="" ondblclick="">
+            <i class="fas fa-plus"></i> Add New Goal
+          </button>
+        </div>
+      </div>
+    {% endif %}
+    <!-- </div> -->
+</div>
+
+  <div class="row mt-3">
+    <div class="col-sm-3">
+
     </div>
   </div>
-  <div class="container">
-    <div class="col-sm-3" style="width:32%;">
-            <div id="goalHead" class="bg-secondary">GOAL TO ALIGN:</div>
-            <div id="goalThis" class="border">
-                <div>CURR {{curr_goal.goal}}</div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-      <div class="col-sm-3" style="width:32%;">
-            <div id="goalHead" class="bg-secondary">ENABLING GOALS:</div>
-            <div id="goalSmall" class="border">
-            {% for g in lower_goal %}
-                <div class="border">LOW {{g.goal}}</div>
-            {% endfor %}
-            </div>
-        </div>
+</div>
+
+<div class="container">
+  <!-- New section -->
+    <div class="row col-sm-12">
+      <div class="col-sm-4">
+        <a href="/goals?stage=d" class="btn btn-primary btn-block mt-3 flex-fill">View Goals</a>
+      </div>
+      <div class="col-sm-4">
+        <a href="/goals?stage=p" class="btn btn-primary btn-block mt-3 flex-fill">Find Priorities</a>
+      </div>
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-warning btn-block mt-3 flex-fill" style="background-color: #bd0c0c; border-color: #bd0c0c;" onclick="location.href='{{ request.path }}?stage=a&cache_bust=' + Date.now()">
+          <i class="fas fa-sync-alt"></i> Refresh Page
+        </button>
+      </div>
     </div>
 </div>
-  
-  <script>
 
-    function btnNext() {
-      const g = document.querySelectorAll(".goalSort");
-      const g2 = document.querySelectorAll(".goalTime");
+<script>
+  function toggleSelected(element, goalId, currGoalId, type) {
+    var form = new FormData();
+    form.append("drillGoal", goalId);
+    form.append("currGoal", currGoalId);
+    form.append("type", type);
+    form.append("userId", {{user.id}});
 
-      var x = document.getElementById("goalTime");
-      var y = document.getElementById("goalSort");
-
-      if (x.style.display === "none") {
-        for (const goal of g2) {
-          goal.style.display = "block";
-          fieldActive(".lblTime");
-        }
-        document.getElementById("gStep").innerHTML = "<i class='bi bi-2-circle-fill'></i>  Next, select how long you think it will take to achieve each goal.";
-        document.getElementById("gInstr").innerHTML = "This is just a rough estimate.  You can change it later if you want.";
+    if (element.classList.contains('active')) {
+      element.classList.remove('active');
+      form.append("action", "remove");
+      if (type == 'low') {
+        var card_body = document.querySelector('.l_other');
+        var goal_elem = document.querySelector('.lower');
+        var none_elem = document.querySelector('.l_none');
       } else {
-        fieldActive(".goalSort");
-        for (const goal of g) {
-          goal.style.display = "block";
-        }
-        document.getElementById("gStep").innerHTML = "<i class='bi bi-3-circle-fill'></i>  Finally, drag and drop your goals into the order you want to achieve them.";
-        document.getElementById("gInstr").innerHTML = "You can change this later if you want.";
-        document.getElementById("btnNext").style.display = "none";
-        document.getElementById("btnSave").style.display = "inline-block";
-
+        console.log('high');
+        var card_body = document.querySelector('.h_other');
+        var goal_elem = document.querySelector('.higher');
+        var none_elem = document.querySelector('.h_none');
       }
-    }
-
-    function fieldActive(newFld) {
-        const ele = document.querySelectorAll(".activeText");
-        ele.forEach(function (e) {
-          e.classList.remove("activeText");
-        });
-        const ele2 = document.querySelectorAll(newFld);
-        ele2.forEach(function (e) {
-          e.classList.add("activeText");
-        });
+      card_body.appendChild(element.parentNode);
+      
+      if (goal_elem.childElementCount == 1) {
+        none_elem.style.display = 'Block';
       }
 
-
- 
-
-      function saveGoals(){
-        var form = new FormData();
-        var goals = [];
-        var goalTimes = [];
-        var userId = {{user.id}};
-        $('#' + 'listId2' + ' .listitem').each(function(index) {
-          goals.push($(this).find('input').val());
-          goalTimes.push($(this).find('select').val());
-        });
-        jGoals = JSON.stringify({ data: goals });
-        jTimes = JSON.stringify({ data: goalTimes });
-        form.append("goals", jGoals);
-        form.append("goalTimes", jTimes);
-        form.append("userId", userId);
-
-        console.log('goals:  ',goals);
-        console.log('goalTimes:  ',goalTimes);
-
-        var settings = {
-        "url": "http://{{apiserver}}/api/goalapi/",
-        "method": "POST",
-        "timeout": 0,
-        "processData": false,
-        "mimeType": "multipart/form-data",
-        "contentType": false,
-        "data": form,
+    } else {
+      element.classList.add('active');
+      form.append("action", "add");
+      if (type == 'low') {
+        var card_body = document.querySelector('.lower');
+        var goal_elem = document.querySelector('.l_other');
+        var none_elem = document.querySelector('.l_none');
+      } else {
+        console.log('high');
+        var card_body = document.querySelector('.higher');
+        var h_goal_elem = document.querySelector('.higher .h_goal');
+        var other_card_body = document.querySelector('.h_other');
+        var goal_elem = document.querySelector('.h_other');
+        var none_elem = document.querySelector('.h_none');
+        if (h_goal_elem !== null) {
+          h_goal_elem.classList.remove('active');
+          other_card_body.appendChild(h_goal_elem.parentNode);
         };
+      }
+      console.log('moving element');
+      card_body.appendChild(element.parentNode);
+      none_elem.style.display = 'None';
 
-        $.ajax(settings).done(function (response) {
-        let answer = JSON.parse(response);
-        let text = answer.choices[0].text;
-        console.error(answer);
-        console.log(text);
+    }
+  console.log(goalId, currGoalId, {{user.id}}, form.get("action"));
+
+  var settings = {
+      "url": "http://{{apiserver}}/api/goal_drilldown/",
+      "method": "POST",
+      "timeout": 0,
+      "processData": false,
+      "mimeType": "multipart/form-data",
+      "contentType": false,
+      "data": form,
+      };
+
+      $.ajax(settings).done(function (response) {
+        console.log(response);
       });
+
+}
+
+
+  function toggleDoubleSelected(id) {
+    var goal_id = id; 
+    var url = window.location.href + '?stage=a&goal_id=' + goal_id;
+    console.warn(url);
+    window.location.href = url;
+  }
+
+// <!-- JavaScript code to trigger the modal window -->
+
+$(document).ready(function() {
+  $('#addGoalModal').on('shown.bs.modal', function() {
+    setTimeout(function() {
+      $('#goalName').trigger('focus');
+    }, 500);
+    console.log('modal shown');
+  });
+});
+  
+
+  function editGoal(goalId, action) {
+    var form = new FormData();
+    var goal = document.getElementById('editGoalName').value;
+    form.append("goalId", goalId);
+    form.append("goal", goal);
+    form.append("userId", {{user.id}});
+    form.append("action", action);
+    var settings = {
+    "url": "http://{{apiserver}}/api/goaledit/",
+    "method": "POST",
+    "timeout": 0,
+    "processData": false,
+    "mimeType": "multipart/form-data",
+    "contentType": false,
+    "data": form,
     };
+
+    $.ajax(settings).done(function (response) {
+      console.log(response);
+      let answer = JSON.parse(response);
+      // let text = answer.choices[0].text;
+      console.error(answer);
+      // console.log(text);
+      $("#addGoalModal").modal('hide');
+      $("#editGoalModal").modal('hide');
+      $("#curr_goal").text(goal);
+
+      });
+    
+  };
 
     </script>
 
@@ -134,3 +287,68 @@
 
 
 {% endblock content %}
+
+{% block modal %}
+<!-- Modal window -->
+<div class="modal fade" id="addGoalModal" tabindex="-1" role="dialog" aria-labelledby="addGoalModalLabel" aria-hidden="true" style="z-index: 10;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top: 175px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addGoalModalLabel">Add New Goal</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add your form fields here -->
+        <form>
+          <div class="form-group">
+            <label for="goalName">Goal Name</label>
+            <input type="text" class="form-control" id="goalName" placeholder="Enter goal name">
+          </div>
+          <div class="form-group">
+            <label for="goalType">Goal Type</label>
+            <select class="form-control" id="goalType">
+              <option>Option 1</option>
+              <option>Option 2</option>
+              <option>Option 3</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editGoalModal" tabindex="-1" role="dialog" aria-labelledby="editGoalModalLabel" aria-hidden="true" style="z-index: 10;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top: 175px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editGoalModalLabel">Edit Goal</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add your form fields here -->
+        <form>
+          <div class="form-group">
+            <label for="goalName">Goal Name</label>
+            <input type="text" class="form-control" id="editGoalName" placeholder="{{curr_goal.goal}}" value="{{curr_goal.goal}}">
+            <input type="hidden" id="goalId" value="{{curr_goal.goal_id}}">
+            <input type="hidden" id="goalType" value="{{curr_goal.goal_type_id}}">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="editGoal({{curr_goal.goal_id}},'edit')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal %}

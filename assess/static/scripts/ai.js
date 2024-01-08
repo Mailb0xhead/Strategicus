@@ -53,7 +53,7 @@ function ask_ai(in_prompt) {
     //  console.log(key[0] + ', ' + key[1]);
     // }
     var settings = {
-        "url": "http://192.168.0.208:777/api/ai/",
+        "url": "http://192.168.0.209:777/api/ai/",
         "method": "POST",
         "timeout": 0,
         "processData": false,

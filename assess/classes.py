@@ -29,6 +29,8 @@ class actions:
     def __init__(self, data):
         self.id = data['question_id__outcome_id']
         self.name = data['actions']
+        self.priority = data['priority']
+        self.benefit = data['benefit']
 
     def __str__(self):
         return self.name
@@ -127,7 +129,7 @@ class task:
     def __init__(self, data):
         self.id = data['goal_id']
         self.name = data['goal']
-        self.duration = data['duration']
+        self.duration = data['goal_type_id__goal_abbv']
         self.priority = data['priority']
 
     def __str__(self):
@@ -137,7 +139,7 @@ class st_goal:
     def __init__(self, data):
         self.id = data['goal_id']
         self.name = data['goal']
-        self.duration = data['duration']
+        self.duration = data['goal_type_id__goal_abbv']
         self.priority = data['priority']
         self.tasks = []
 
@@ -152,7 +154,7 @@ class mt_goal:
     def __init__(self, data):
         self.id = data['goal_id']
         self.name = data['goal']
-        self.duration = data['duration']
+        self.duration = data['goal_type_id__goal_abbv']
         self.priority = data['priority']
         self.st_goals = []
 
@@ -167,7 +169,7 @@ class lt_goal:
     def __init__(self, data):
         self.id = data['goal_id']
         self.name = data['goal']
-        self.duration = data['duration']
+        self.duration = data['goal_type_id__goal_abbv']
         self.priority = data['priority']
         self.mt_goals = []
 
@@ -182,7 +184,7 @@ class ll_goal:
     def __init__(self, data):
         self.id = data['goal_id']
         self.name = data['goal']
-        self.duration = data['duration']
+        self.duration = data['goal_type_id__goal_abbv']
         self.priority = data['priority']
         self.lt_goals = []
 

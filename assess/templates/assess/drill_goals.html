@@ -22,8 +22,7 @@
   <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Let's Drill down your LT goals...</h4>
   <p id="gInstr" class="text-center">Description for what you are doing...</p>
 </div>
-
-<div class="container">
+<div class="container" style="flex-direction: column">
   {% for ll in goals.ll_goals %}
   <div id="LLcont{{forloop.counter}}" class="box row-fluid">
     <div id="LL{{forloop.counter}}" class="LL listitem box cellrow" name="xxx">
@@ -69,6 +68,18 @@
   </div>
   {% endfor %}
 </div>
+<div class="container">
+  <!-- New section -->
+    <div class="row col-sm-12">
+      <div class="col-sm-6">
+        <a href="/goals?stage=a" class="btn btn-primary btn-block mt-3 flex-fill">Edit Goals</a>
+      </div>
+      <div class="col-sm-6">
+        <a href="/goals?stage=p" class="btn btn-primary btn-block mt-3 flex-fill">Find Priorities</a>
+      </div>
+    </div>
+  </div>
+
 
 
   <div class="height"></div>
