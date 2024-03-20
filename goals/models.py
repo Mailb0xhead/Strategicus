@@ -27,13 +27,13 @@ class Goals(models.Model):
 class Project(models.Model):
     pid = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    sid = models.ForeignKey('Section', db_column='sid')
+    sid = models.ForeignKey('Section', on_delete=models.CASCADE, related_name='f_sid')
 
 class Section(models.Model):
     sid = models.IntegerField(primary_key=True)
     section_name = models.CharField(max_length=45, blank=True, null=True)
-    pid = models.ForeignKey('Project', db_column='pid')
-    tid = models.ForeignKey('Task', db_column='tid')    
+    pid = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='f_pid')
+    tid = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='f_tid')    
     
     
 class Task(models.Model):
@@ -42,7 +42,7 @@ class Task(models.Model):
     content = models.CharField(max_length=500, blank=True, null=True)
     priority = models.IntegerField(blank=True, null=True)
     due_date = models.DateField(blank=True, null=True)
-    sid = models.ForeignKey('Section', db_column='sid')
-    pid = models.ForeignKey('Project', db_column='pid')
-    parent_id = models.ForeignKey('Task', db_column='tid')
+    sid = models.ForeignKey('Section', on_delete=models.CASCADE, related_name='f2_sid')
+    pid = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='f2_pid')
+    parent_id = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='f2_tid')
 

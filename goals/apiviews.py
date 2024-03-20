@@ -128,7 +128,7 @@ def goaledit(request):
         return Response(serializer.data['editGoalName'] + ' has been ' + serializer.data['action'] +'ed. TEST', status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def get_todoist(request):
+def refresh(request):
     # api = TodoistAPI("f33e38b843a30cdd91e534313f8cbec8969a3c22")
     # mydb = mysql.connector.connect(
     # host=os.getenv('HOSTNAME'),
