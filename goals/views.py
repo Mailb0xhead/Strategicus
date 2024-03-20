@@ -18,6 +18,18 @@ def index(request):
                 }
         return HttpResponse(template.render(context, request))
     
+def calc_duration(duration):
+    if duration == 'LL':
+        return 'XX','LT'
+    elif duration == 'LT':
+        return 'LL','MT'
+    elif duration == 'MT':
+        return 'LT','ST'
+    elif duration == 'ST':
+        return 'MT','TK'
+    else:
+        return 'ST','XX'
+    
 
 def goals(request):
     print('in goals')
