@@ -78,3 +78,30 @@ function addNewRecord(source) {
     });
 
   };
+
+  function refresh(){
+    var myURL = "http://"+myapiserver+"/api/refresh/";
+    console.warn('myURL: ', myURL);
+    var settings = {
+    //   "url": "http://{{apiserver}}/api/goaledit/",
+      "url": myURL,
+      "method": "GET",
+      "timeout": 0,
+      "processData": false,
+      "contentType": false,
+      "data": "",
+    };
+
+    $.ajax(settings).done(function (response) {
+      console.log(response.message);
+      let answer = response;
+      console.error(answer);
+      location.reload();
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ', errorThrown);
+      console.error('Status: ', textStatus);
+      console.error('jqXHR: ', jqXHR);
+      alert('Error: ' + jqXHR.responseText);
+    });
+  };
