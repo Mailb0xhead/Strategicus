@@ -37,6 +37,8 @@ ALLOWED_HOSTS = ['192.168.0.209','localhost',]
 
 INSTALLED_APPS = [
     'assess.apps.AssessConfig',
+    'goals.apps.GoalsConfig',
+    'ai.apps.AiConfig',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',

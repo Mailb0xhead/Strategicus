@@ -1,0 +1,80 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <script src="{% static 'scripts/api.js' %}"></script>
+    <script src="{% static 'scripts/main.js' %}"></script>
+    <script src="{% static 'scripts/dnd.js' %}"></script>
+    <script>
+
+
+
+    </script>
+<div class="col-sm-10">
+  <h2 class="text-center">Goal List</h2>
+  
+    <style>
+
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/tablesorter@2.31.3/dist/js/jquery.tablesorter.min.js"></script>
+
+    <table class="table zebra-table" id="goalsTable">
+      <thead>
+        <tr class="table-header">
+          <th>ID</th>
+          <th>Goal</th>
+          <th>Goal Type</th>
+          <th>Priority</th>
+          <th>Roll Up ID</th>
+          <th>Roll Up Goal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for goal in goals %}
+        <tr onclick="openEditModal('{{goal.goal_id}}','{{ goal.goal }}','{{goal.roll_up_id}}', '{{goal.priority}}', '{{goal.goal_type_id}}', 'edit')">
+          <td>{{ goal.goal_id }}</td>
+          <td title="{{ goal.goal }}">{{ goal.goal|truncatechars:50 }}</td>
+          <td title="{{ goal.goal_type_id__goal_name }}">{{ goal.goal_type_id__goal_abbv }}</td>
+          <td>{{ goal.priority }}</td>
+          <td>{{ goal.roll_up_id }}</td>
+          <td title="{{ goal.roll_up_id__goal }}">{{ goal.roll_up_id__goal|truncatechars:50 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="btn btn-primary" onclick="addNewRecord()">Add New Record</button>
+
+  </div>
+
+    <!-- Buttons Section -->
+{% include 'goals_footer.html' with page='l' %}
+
+
+
+{% endblock content %}
+
+{% block modal %}
+<!-- Modal window -->
+
+
+{% include 'assess/goals_modals.html' %}
+
+<script src="{% static 'scripts/goals.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+      $("#goalsTable").tablesorter();
+    });
+  var clickedRow;
+  var myapiserver = "{{ apiserver }}";
+
+</script>
+
+
+{% endblock modal %}

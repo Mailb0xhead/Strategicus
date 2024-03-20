@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row col-sm-12">
+    {% if page != 'd' %}
+      <div class="col-sm-3">
+        <a href="/goal?stage=d" class="btn btn-primary btn-block mt-3 flex-fill">View Goals</a>
+      </div>
+      {% endif %}
+      {% if page != 'p' %}
+      <div class="col-sm-3">
+        <a href="/goal?stage=p" class="btn btn-primary btn-block mt-3 flex-fill">Find Priorities</a>
+      </div>
+      {% endif %}
+      {% if page != 'l' %}
+      <div class="col-sm-3">
+        <a href="/goal?stage=l" class="btn btn-primary btn-block mt-3 flex-fill">Goals List</a>
+      </div>
+      {% endif %}
+      {% if page != 'a' %}
+      <div class="col-sm-3">
+        <a href="/goal?stage=a" class="btn btn-primary btn-block mt-3 flex-fill">Edit Goals</a>
+      </div>
+      {% endif %}
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-warning btn-block mt-3 flex-fill" style="background-color: #bd0c0c; border-color: #bd0c0c;" onclick="location.href='{{ request.path }}?stage=a&cache_bust=' + Date.now()">
+          <i class="fas fa-sync-alt"></i> Refresh Page
+        </button>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,111 @@
+{% extends 'assess/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <!-- <script src="https://www.w3schools.com/lib/w3.js"></script> -->
+    <!-- <script src="{% static 'scripts/api.js' %}"></script> -->
+    <!-- <script src="{% static 'scripts/main.js' %}"></script> -->
+    <!-- <script src="{% static 'scripts/dnd.js' %}"></script> -->
+    <script>
+
+
+
+    </script>
+<div class="col-sm-10">
+  <h2 class="text-center">DRILL Goals</h2>
+  <h4 id="gStep" class="text-center"><i class="bi bi-1-circle-fill"></i>  Let's Drill down your LT goals...</h4>
+  <p id="gInstr" class="text-center">Description for what you are doing...</p>
+</div>
+
+<div class="container">
+<!-- Goal Selector -->
+  <div id="listId1" class="col-md-12">
+    <div id="LLcont1" class="box row-fluid box">
+      <div id="LL1" class="LL listitem box cellrow" name="xxx">
+        <div id="LLT1" class="col-md-2" style="">Life Long Goal</div>
+        <div id="LTcont1" class="box row-fluid" name="xxx">
+            <div id="LT1" class="LT listitem box cellrow" name="xxx">
+              <div id="LTT1" class="col-md-2" style="">Long Term Goal</div>
+
+              <div id="MTcont1" class="box row-fluid" name="xxx">
+                <div id="MT1" class="MT listitem box cellrow" name="xxx">
+                  <div id="MTT1" class="col-md-2" style="">Mid Term Goal</div>
+                  <i class="bi bi-chevron-down toggle-icon"></i>
+                  <div id="ST1" class="box row-fluid" name="xxx">
+                      <div id="STcont1" class="ST listitem box cellrow" name="xxx">
+                        <div id="STT1" class="col-md-2" style="">Short Term Goal</div>
+                        <div id="TKcont1" class="box row-fluid" name="xxx">
+                          <div id="TK1" class="TK listitem box cellrow" name="xxx">
+                            <div id="TKT1" class="col-md-2" style="">Task</div>
+                          </div>
+                          <div id="TK2" class="TK listitem box cellrow" name="xxx">
+                            <div id="TKT2" class="col-md-2" style="">Task</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="STcont2" class="ST listitem box cellrow" name="xxx">
+                        <div id="STT2" class="col-md-2" style="">Short Term Goal</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="MTcont2" class="MT listitem box cellrow" name="xxx">
+                    <div id="MTT2" class="col-md-2" style="">Mid Term Goal</div>
+                  </div>
+              </div>
+            </div>
+            <div id="LTcont2" class="LT listitem box cellrow" name="xxx">
+              <div id="LTT2" class="col-md-2" style="">Long Term Goal</div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="LT" class="listitem box cellrow" name="xxx">
+      <div id="goalSort" class="cell box " style="">Long Term Goal</div>
+    </div>
+    <div id="MT" class="listitem box cellrow" name="xxx">
+      <div id="goalSort" class="cell box " style="">Mid Term Goal</div>
+    </div>
+    <div id="ST" class="listitem box cellrow" name="xxx">
+      <div id="goalSort" class="cell box " style="">Short Term Goal</div>
+    </div>
+    <div id="TK" class="listitem box cellrow" name="xxx">
+      <div id="goalSort" class="cell box " style="">Task</div>
+    </div>
+  </div>
+
+</div>
+<div class="container">
+  <!-- New section -->
+    <div class="row col-sm-12">
+      <div class="col-sm-6">
+        <a href="/goals?stage=d" class="btn btn-primary btn-block mt-3 flex-fill">View Goals</a>
+      </div>
+      <div class="col-sm-6">
+        <a href="/goals?stage=p" class="btn btn-primary btn-block mt-3 flex-fill">Find Priorities</a>
+      </div>
+    </div>
+</div>
+
+  <div class="height"></div>
+  
+  <script>
+$(document).ready(function() {
+  $('.toggle-icon').on('click', function() {
+    console.log('clicked')
+    $('#ST1').toggle();
+    $(this).toggleClass('bi-chevron-down bi-chevron-right');
+  });
+});
+  </script>
+
+
+
+
+
+{% endblock content %}

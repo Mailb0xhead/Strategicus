@@ -5,7 +5,7 @@ from django.db.models import F
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Components, Subcomps, Assessments, Questions, Scores, Resources, Outcomes, Engagements, Goals
+from .models import Components, Subcomps, Assessments, Questions, Scores, Resources, Outcomes, Engagements
 from .classes import assess, engage, ll_goal, goal
 import os
 import openai
@@ -187,7 +187,8 @@ def goals(request):
     apiserver = os.environ['API_SERVER']
     context = {'title': 'STRATEGICUS',
                'apiserver': apiserver,}
-    goals = Goals.objects.values('goal_id','goal','goal_type_id__goal_abbv','goal_type_id__goal_name','priority','roll_up_id').filter(user=request.user)
+    goals = Goals.objects.values('goal_id','goal','goal_type_id','goal_type_id__goal_abbv','goal_type_id__goal_name','priority','roll_up_id', 'roll_up_id__goal').filter(user=request.user).order_by('priority')
+    goal_types = Goal_Types.objects.values('goal_type_id', 'goal_abbv', 'goal_name','goal_timeframe','goal_type_desc')
     # print(goals.query)
     # print(len(goals))
     
@@ -217,8 +218,9 @@ def goals(request):
                             st.add_task(goals.filter(roll_up_id=st.id, goal_type_id__goal_abbv='TK'))
         context['goals']=thisGoal
     elif request.GET.get('stage') == 'a' and len(goals) > 0:
+        # print(goals)
         if request.GET.get('goal_id') == None:          # Set the default goal to the first goal priority in the list
-            curr_goal = goals.filter(priority=0)[0]
+            curr_goal = goals.first()
         else:
             curr_goal = goals.filter(goal_id=request.GET.get('goal_id'))[0]
         h_goal = curr_goal['roll_up_id']
@@ -232,26 +234,38 @@ def goals(request):
         if not other_l_goals.exists() and not lower_goal.exists():
             lower_goal = 'None'
             
-        print(other_l_goals, lower_goal)
+        # print(other_l_goals, lower_goal)
         if h_goal == None:
             print('no higher goal')
             higher_goal = 'None'
         else:
             higher_goal = goals.filter(goal_id=h_goal)[0]
         other_h_goals = goals.filter(goal_type_id__goal_abbv=higher_duration, roll_up_id=None).exclude(goal_id = h_goal)
-        print(other_h_goals)
+        # print(other_h_goals)
         # higher_goal = goals.get(goal_id=h_goal)
-        print('curr:',curr_goal,'low:', lower_goal,'high:', higher_goal)
+        # print('curr:',curr_goal,'low:', lower_goal,'high:', higher_goal)
         context['curr_goal']=curr_goal
         context['other_goals']=other_l_goals
         context['higher_goal'] = higher_goal
         context['other_h_goals'] = other_h_goals
         context['lower_goal'] = lower_goal
+        context['goal_types']=goal_types
+        context['goals']=goals
         template = loader.get_template('assess/goals_align.html')
     elif request.GET.get('stage') == 'p':
         context['goals']=goals
         template = loader.get_template('assess/goalsetter.html')
+    elif request.GET.get('stage') == 'l':
+        context['goals']=goals
+        context['goal_types']=goal_types
+        template = loader.get_template('assess/goals_list.html')
     else:
         context['goals']=goals
         template = loader.get_template('assess/goals.html')
     return HttpResponse(template.render(context, request))
+
+
+'''
+THIS IS A COMMENT
+'''
+

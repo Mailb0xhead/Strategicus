@@ -387,6 +387,18 @@ body {
     color: #fff;
   }
 
+  .zebra-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .zebra-table tbody tr:hover {
+    background-color: #e0e0e0;
+  }
+
+  .table-header {
+    background-color: #9a8778;
+    color: black;
+  }
   /* *******************   Chatbot styles ******************* */
 
   .chat-container {

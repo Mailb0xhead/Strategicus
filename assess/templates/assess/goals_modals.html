@@ -1,0 +1,49 @@
+<div class="modal fade" id="editGoalModal" tabindex="-1" role="dialog" aria-labelledby="editGoalModalLabel" aria-hidden="true" style="z-index: 10;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top: 175px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editGoalModalLabel">Edit Goal</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add your form fields here -->
+        <form id="editForm">
+          <div class="form-group">
+            <label for="goalName">Goal Name</label>
+            <textarea class="form-control" id="editGoalName" name="editGoalName" rows="3" cols="50" placeholder="">{{goals.goal}}</textarea>
+            <div class="row">
+              <div class="col">
+                <label for="editGoalPriority" size="4">Priority</label>
+                <input type="text" name="editGoalPriority" class="form-control" id="editGoalPriority" placeholder="" value="">
+              </div>
+              <div class="col">
+                <label for="goalType">Goal Type</label>
+                <select class="form-control" name="editGoalType" id="editGoalType">
+                  {% for type in goal_types %}
+                  <option value="{{ type.goal_type_id }}" title="{{type.goal_type_desc}}">{{ type.goal_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <label for="editgoalRollup">Roll Up Goal</label>
+            <select class="form-control" name="editGoalRollUp" id="editGoalRollUp">
+              {% for goal in goals %}
+              <option value="{{ goal.goal_id }}" title="{{goal.goal}}">{{ goal.goal|truncatechars:50 }}</option>
+              {% endfor %}
+            </select>
+            <input type="hidden" name="goalId" id="goalId" value="{{goal.goal_id}}">
+            <input type="hidden" name="userId" id="userId" value="{{user.id}}">
+            <input type="hidden" name="action" id="action" value="none">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-save" class="btn btn-primary" onclick="editGoal()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="btn-del" class="btn btn-danger" onclick="document.getElementById('action').value='delete'; editGoal();">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
