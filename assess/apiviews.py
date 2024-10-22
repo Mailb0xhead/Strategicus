@@ -17,10 +17,14 @@ from .serializers import QuestionSerializer, ChatSerializer, ActionSerializer, G
 
 import os
 import openai
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts.example_selector import LengthBasedExampleSelector
-from langchain.llms import OpenAI
-from langchain.schema import HumanMessage, SystemMessage, AIMessage
+
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.prompts.chat import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+    SystemMessagePromptTemplate,
+)
+from langchain_openai import ChatOpenAI
 
 
 ### STRATEGICUS AI API PROCESSOR ####
@@ -51,49 +55,24 @@ def ai(request):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response("No valid action requested", status=status.HTTP_400_BAD_REQUEST)
-        # example_template = """
-        # Question: {query}
-        # Response: {answer}
-        # """
-        # example_prompt = PromptTemplate(input_variables=["query", "answer"],template=example_template)
-        # examples = [
-        #     {
-        #         "query": "What is the value of a strategy to a midsize business?",
-        #         "answer": "A strategy is a critical tool for a midsize business to help them focus on the right things to do to grow their business.  It helps them to prioritize their work and make sure that they are focusing on the right things to grow their business."
-        #     }, {
-        #         "query": "How do I know if my cybersecurity program is effective?",
-        #         "answer": "You can measure the effectiveness of your cybersecurity program by looking at the number of incidents that you have had in the past year.  If you have had a lot of incidents, then your cybersecurity program is not effective.  If you have had few incidents, then your cybersecurity program is effective."
-        #     }, {
-        #         "query": "What is the right investment level for technology in a midsize business?",
-        #         "answer": "The right investment level for technology in a midsize business is 3% of revenue.  This is the average investment level for technology in a midsize business."
-        #     }
-        # ]
-        # example_selector = LengthBasedExampleSelector(
-        #     examples=examples,
-        #     example_prompt=example_prompt,
-        #     max_length=1000
-        #     )
-        
-        aiToken = os.getenv("OPEN_AI_KEY")
-        openai.api_key = aiToken
-        os.environ["OPENAI_API_KEY"] = aiToken
 
-        chat = ChatOpenAI(temperature=0.1, model="gpt-3.5-turbo", max_tokens=1000)
-        system_message = SystemMessage(content=Client + Tone + Instructions)
-        human_message1 = HumanMessage(content=aiHistory)
-        human_message2 = HumanMessage(content=aiPrompt)
-        messages = [system_message, human_message1, human_message2]
-        print('messages: ',messages)
-        ai_response = chat(messages)
-        print('AI Response: ',ai_response)
-        # ai_response = openai.ChatCompletion.create(
-        # model="gpt-3.5-turbo",
-        # messages=[
-        #         {"role": "system", "content": "You are a helpful assistant."},
-        #         {"role": "user", "content": aiHistory},
-        #         {"role": "user", "content": aiPrompt},
-        #     ]
-        # )
+        try:
+            aiToken = os.getenv("OPEN_AI_KEY")
+            # openai.api_key = aiToken
+            os.environ["OPENAI_API_KEY"] = aiToken
+
+            chat = ChatOpenAI(temperature=0.1, model="asst_3rIAcQKbMoC92mFgy95Gp83a", max_tokens=1000)
+            system_message = SystemMessage(content=Client + Tone + Instructions)
+            human_message1 = HumanMessage(content=aiHistory)
+            human_message2 = HumanMessage(content=aiPrompt)
+            messages = [system_message, human_message1, human_message2]
+            print('messages: ',messages)
+
+            ai_response = chat.invoke(messages)
+            print('AI Response: ',ai_response)
+        except openai.error.RateLimitError:
+            return Response("Rate limit exceeded", status=status.HTTP_429_TOO_MANY_REQUESTS)
+
     else:
         ai_response = 'unknown post error'
     return Response(ai_response.content, status=status.HTTP_200_OK)

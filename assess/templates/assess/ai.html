@@ -36,10 +36,11 @@
                   </div>
                 </form>
               </div>
-      </div>
+      </div>  
   
   <script>
     document.getElementById("aiForm").addEventListener("submit", function(event) {
+      console.log("Form submission blocked.");
       event.preventDefault();
       ask_ai();
     });
@@ -152,6 +153,7 @@
           console.error("Error:", error);
         });
     }
+    // Testnote
   </script>
 
   

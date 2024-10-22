@@ -9,6 +9,6 @@ urlpatterns = [
     path('profile',views.profile, name='profile' ),
     path('ai_old/', views.ai, name='ai'),
     path('engagement/', views.engagement, name='engagement'),
-    path('ai2/', apiviews.ai, name='ai'),
+    path('ai/', apiviews.ai, name='ai'),
     path('assessment/', views.assessment, name='assessment'),
     ]

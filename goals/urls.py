@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('goal/', views.goals, name='goals'),
     path('goalapi/', apiviews.goals_api, name='goals'),
+    path('refresh/', apiviews.refresh, name='refresh'),
     path('goal_drilldown/', apiviews.goal_drilldown, name='drilldown'),
     path('goaledit/', apiviews.goaledit, name='goaledit'),
     ]
